@@ -1,0 +1,72 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
+import 'package:job_finder/models/jobs.dart';
+
+class JobRepository extends GetxController {
+  static JobRepository get instance => Get.find();
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> createJob(JobModel job) async {
+    try {
+      await _firestore.collection('jobs').add(job.toJson());
+    } catch (e) {
+      // Handle any errors
+      print('Error creating Job: $e');
+      rethrow;
+    }
+  }
+
+  JobExists(String uid) {
+    try {
+      return _firestore.collection('jobs').doc(uid).get().then((value) {
+        return value.exists;
+      });
+    } catch (e) {
+      // Handle any errors
+      print('Error getting Job: $e');
+      rethrow;
+    }
+  }
+
+  Future<JobModel> getJob(String uid) async {
+    try {
+      final document = await _firestore.collection('jobs').doc(uid).get();
+
+      return JobModel.fromSnapshot(document);
+    } catch (e) {
+      // Handle any errors
+      print('Error getting Job: $e');
+      rethrow;
+    }
+  }
+
+  Future<List<JobModel>> getJobsByRecruiter(String uid) async {
+    try {
+      final document = await _firestore
+          .collection('jobs')
+          .where('recruiterId', isEqualTo: uid)
+          .get();
+      final data = document.docs.map((e) => JobModel.fromSnapshot(e)).toList();
+
+      return data;
+    } catch (e) {
+      // Handle any errors
+      print('Error getting Job: $e');
+      rethrow;
+    }
+  }
+
+  Future<List<JobModel>> getAllJobs(String uid) async {
+    try {
+      final document = await _firestore.collection('jobs').get();
+      final data = document.docs.map((e) => JobModel.fromSnapshot(e)).toList();
+
+      return data;
+    } catch (e) {
+      // Handle any errors
+      print('Error getting Job: $e');
+      rethrow;
+    }
+  }
+}
