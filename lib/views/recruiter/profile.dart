@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:job_finder/controllers/home_page_controller.dart';
+import 'package:job_finder/controllers/recruiter/job_controller.dart';
 import 'package:job_finder/controllers/recruiter/profile_controller.dart';
 import 'package:job_finder/models/recruiter.dart';
 import 'package:job_finder/utils/background.dart';
@@ -21,7 +22,8 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
   }
 
   Widget _body(context) {
-    final controller = Get.put(ProfileController());
+    final profileController = Get.put(ProfileController());
+    final jobController = Get.put(JobController());
 
     return Scaffold(
         backgroundColor: Colors.transparent,
@@ -39,9 +41,9 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
                 children: [
                   _appbar(),
                   // const SizedBox(height: 20),
-                  _topCard(controller),
+                  _topCard(profileController),
                   // const SizedBox(height: 10),
-                  _bottomCard(controller),
+                  _bottomCard(profileController, jobController),
                 ],
               ),
             ),
@@ -197,7 +199,7 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
         }));
   }
 
-  Widget _bottomCard(controller) {
+  Widget _bottomCard(profileController, jobController) {
     double innerHeight = MediaQuery.of(context).size.height * 0.5;
 
     Row bottomCardHeader() {
@@ -231,7 +233,7 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
             textCancel: 'No',
             confirmTextColor: Colors.white,
             onConfirm: () {
-              controller.deleteJob(jobId);
+              jobController.deleteJob(jobId);
               Get.back();
             },
             onCancel: () {
@@ -376,7 +378,7 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
           const SizedBox(height: 20),
           // jobs list
           FutureBuilder(
-              future: controller.getRecruiterJobs(),
+              future: profileController.getRecruiterJobs(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   List jobs = snapshot.data as List;

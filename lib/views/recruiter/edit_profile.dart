@@ -3,11 +3,15 @@ import 'package:get/get.dart';
 import 'package:job_finder/controllers/recruiter/profile_controller.dart';
 import 'package:job_finder/utils/scroll_view_height.dart';
 
-class EditProfilePage extends StatelessWidget {
+class EditProfilePage extends StatefulWidget {
+  const EditProfilePage({super.key});
+
+  @override
+  State<EditProfilePage> createState() => _EditProfilePageState();
+}
+
+class _EditProfilePageState extends State<EditProfilePage> {
   final profileController = Get.put(ProfileController());
-
-  EditProfilePage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

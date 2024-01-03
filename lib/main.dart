@@ -7,7 +7,8 @@ import 'package:job_finder/views/auth/account_type.dart';
 import 'package:job_finder/views/auth/login.dart';
 import 'package:job_finder/views/auth/register_employee.dart';
 import 'package:job_finder/views/auth/register_recruiter.dart';
-import 'package:job_finder/views/recruiter/appliants_page.dart';
+import 'package:job_finder/views/recruiter/job.dart';
+import 'package:job_finder/views/recruiter/edit_job.dart';
 import 'package:job_finder/views/recruiter/edit_profile.dart';
 import 'package:job_finder/views/recruiter/post_job.dart';
 import 'package:job_finder/views/recruiter/profile.dart';
@@ -41,10 +42,11 @@ class MyApp extends StatelessWidget {
           '/register/recruiter': (context) => const RecruiterRegisterPage(),
           '/register/employee': (context) => const EmployeeRegisterPage(),
           '/recruiter/profile': (context) => const RecruiterProfilePage(),
-          '/recruiter/edit-profile': (context) => EditProfilePage(),
+          '/recruiter/edit-profile': (context) => const EditProfilePage(),
           '/recruiter/post-job': (context) => const PostJobForm(),
           '/recruiter/posts/appliants': (context) => const AppliantsPage(),
           '/user/profile': (context) => const UserProfilePage(),
+          '/recruiter/edit-job': (context) => const EditJobPage(),
         });
   }
 }

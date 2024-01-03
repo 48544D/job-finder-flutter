@@ -29,7 +29,7 @@ class JobRepository extends GetxController {
     }
   }
 
-  Future<JobModel> getJob(String uid) async {
+  Future<JobModel> getJobById(String uid) async {
     try {
       final document = await _firestore.collection('jobs').doc(uid).get();
 
@@ -76,6 +76,22 @@ class JobRepository extends GetxController {
     } catch (e) {
       // Handle any errors
       print('Error deleting Job: $e');
+      rethrow;
+    }
+  }
+
+  void updateJob(String jobId, String jobTitle, String jobDescription,
+      String jobLocation, double jobSalary) {
+    try {
+      _firestore.collection('jobs').doc(jobId).update({
+        'title': jobTitle,
+        'description': jobDescription,
+        'location': jobLocation,
+        'salary': jobSalary,
+      });
+    } catch (e) {
+      // Handle any errors
+      print('Error updating Job: $e');
       rethrow;
     }
   }

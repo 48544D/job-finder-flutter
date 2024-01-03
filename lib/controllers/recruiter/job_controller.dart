@@ -5,8 +5,8 @@ import 'package:job_finder/models/jobs.dart';
 import 'package:job_finder/repo/job_repository.dart';
 import 'package:job_finder/utils/authentication.dart';
 
-class PostJobController extends GetxController {
-  static PostJobController get instance => Get.find();
+class JobController extends GetxController {
+  static JobController get instance => Get.find();
   final authController = Get.put(Authentication());
   final jobsRepo = Get.put(JobRepository());
 
@@ -15,6 +15,10 @@ class PostJobController extends GetxController {
   final TextEditingController locationController = TextEditingController();
   final TextEditingController salaryController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  getJobById(String uid) {
+    return jobsRepo.getJobById(uid);
+  }
 
   void postJob() async {
     try {
@@ -66,8 +70,59 @@ class PostJobController extends GetxController {
     }
   }
 
-  void logout() {
-    Authentication().signOut();
-    Get.toNamed('/login');
+  void deleteJob(String jobId) {
+    try {
+      jobsRepo.deleteJob(jobId);
+      Get.snackbar('Success', 'Job deleted successfully',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP);
+      Get.offNamed('/recruiter/profile');
+    } catch (e) {
+      Get.snackbar('Error', e.toString(),
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP);
+    }
+  }
+
+  void updateJob(String jobId) async {
+    try {
+      // check internet connection
+      final result = await Connectivity().checkConnectivity();
+
+      if (result == ConnectivityResult.none) {
+        Get.snackbar('Error', 'No internet connection',
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            snackPosition: SnackPosition.TOP);
+        return;
+      }
+
+      // validate form
+      if (!formKey.currentState!.validate()) {
+        return;
+      }
+
+      // update job
+      jobsRepo.updateJob(
+        jobId,
+        titleController.text,
+        descriptionController.text,
+        locationController.text,
+        double.parse(salaryController.text),
+      );
+
+      Get.snackbar('Success', 'Job updated successfully',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP);
+      Get.offNamed('/recruiter/posts/appliants', arguments: jobId);
+    } catch (e) {
+      Get.snackbar('Error', e.toString(),
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP);
+    }
   }
 }
