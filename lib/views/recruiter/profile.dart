@@ -225,22 +225,7 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
     GestureDetector jobCard(String jobId, String jobTitle, String jobLocation,
         double jobSalary, DateTime jobDate) {
       return GestureDetector(
-        onLongPress: () {
-          Get.defaultDialog(
-            title: 'Delete Job',
-            middleText: 'Are you sure you want to delete this job?',
-            textConfirm: 'Yes',
-            textCancel: 'No',
-            confirmTextColor: Colors.white,
-            onConfirm: () {
-              jobController.deleteJob(jobId);
-              Get.back();
-            },
-            onCancel: () {
-              Get.back();
-            },
-          );
-        },
+        onLongPress: () {},
         onTap: () {
           Get.toNamed('/recruiter/posts/appliants', arguments: jobId);
         },
@@ -277,21 +262,26 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
                       ),
                     ),
                   ),
-                  Text(
-                    jobDate.toString().substring(0, 10),
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                    ),
-                  ),
+                  IconButton(
+                      onPressed: () {
+                        jobController.deleteJob(jobId);
+                        setState(() {});
+                      },
+                      icon: const Icon(Icons.delete, color: Colors.red)),
                 ],
               ),
-              const SizedBox(height: 5),
               SizedBox(
                 width: double.infinity,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(
+                      'Posted on: ${jobDate.toString().substring(0, 10)}',
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    ),
                     Text(
                       jobLocation,
                       style: TextStyle(
@@ -382,7 +372,6 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   List jobs = snapshot.data as List;
-
                   if (jobs.isNotEmpty) {
                     return Column(mainAxisSize: MainAxisSize.max, children: [
                       for (var job in jobs)

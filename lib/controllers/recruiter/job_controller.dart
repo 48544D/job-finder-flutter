@@ -10,11 +10,18 @@ class JobController extends GetxController {
   final authController = Get.put(Authentication());
   final jobsRepo = Get.put(JobRepository());
 
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController locationController = TextEditingController();
-  final TextEditingController salaryController = TextEditingController();
+  late TextEditingController titleController;
+  late TextEditingController descriptionController;
+  late TextEditingController locationController;
+  late TextEditingController salaryController;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  JobController() {
+    titleController = TextEditingController();
+    descriptionController = TextEditingController();
+    locationController = TextEditingController();
+    salaryController = TextEditingController();
+  }
 
   getJobById(String uid) {
     return jobsRepo.getJobById(uid);
@@ -77,12 +84,13 @@ class JobController extends GetxController {
           backgroundColor: Colors.green,
           colorText: Colors.white,
           snackPosition: SnackPosition.TOP);
-      Get.offNamed('/recruiter/profile');
+      update();
     } catch (e) {
       Get.snackbar('Error', e.toString(),
           backgroundColor: Colors.red,
           colorText: Colors.white,
           snackPosition: SnackPosition.TOP);
+      throw e;
     }
   }
 

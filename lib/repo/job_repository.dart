@@ -76,7 +76,7 @@ class JobRepository extends GetxController {
     } catch (e) {
       // Handle any errors
       print('Error deleting Job: $e');
-      rethrow;
+      throw e;
     }
   }
 

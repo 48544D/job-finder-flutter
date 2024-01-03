@@ -37,7 +37,7 @@ class ProfileController extends GetxController {
     companyController.text = recruiter.company;
   }
 
-  getRecruiterData() {
+  getRecruiterData() async {
     final uid = authController.currentUser!.uid;
     return recruiterRepo.getRecruiter(uid);
   }
