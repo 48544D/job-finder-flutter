@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:job_finder/models/user.dart';
+import 'package:job_finder/utils/authentication.dart';
 
 class UserRepository extends GetxController {
   static UserRepository get instance => Get.find();
@@ -44,6 +45,18 @@ class UserRepository extends GetxController {
     }
   }
 
+  Future<UserModel> getUser(String uid) async {
+    try {
+      final document = await _firestore.collection('users').doc(uid).get();
+
+      return UserModel.fromSnapshot(document);
+    } catch (e) {
+      // Handle any errors
+      print('Error getting user: $e');
+      rethrow;
+    }
+  }
+
   Future<List<UserModel>> getAllUsers(String uid) async {
     try {
       final document = await _firestore.collection('users').get();
@@ -55,5 +68,16 @@ class UserRepository extends GetxController {
       print('Error getting user: $e');
       rethrow;
     }
+  }
+
+  void updateUser(
+      String firstName, String lastName, String email, String profilePicture) {
+    final uid = Get.find<Authentication>().currentUser!.uid;
+    _firestore.collection('users').doc(uid).update({
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'profilePicture': profilePicture,
+    });
   }
 }
