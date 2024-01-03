@@ -17,6 +17,18 @@ class Authentication {
         email: email, password: password);
   }
 
+  // update user email
+  updateEmail({required String email, required String password}) async {
+    try {
+      final credential = EmailAuthProvider.credential(
+          email: currentUser!.email!, password: password);
+      await currentUser!.reauthenticateWithCredential(credential);
+      await currentUser!.updateEmail(email);
+    } catch (e) {
+      throw e;
+    }
+  }
+
   Future<void> signOut() async {
     await _auth.signOut();
   }

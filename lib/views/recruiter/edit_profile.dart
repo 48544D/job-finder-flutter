@@ -12,6 +12,13 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   final profileController = Get.put(ProfileController());
+
+  @override
+  void initState() {
+    super.initState();
+    profileController.fillControllers();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +36,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
       body: ScrollViewWithHeight(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Form(
             key: profileController.formKey,
             child: Column(
@@ -52,56 +59,70 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                 ),
                 const SizedBox(height: 20.0),
-                TextFormField(
-                  controller: profileController.firstNameController,
-                  decoration: InputDecoration(
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                        width: 2,
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: profileController.firstNameController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'First name is required';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'First Name',
+                          labelStyle: TextStyle(
+                            color: Colors.grey.shade800,
+                            fontSize: 16,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          prefixIcon: const Icon(
+                            Icons.person_2_sharp,
+                            color: Colors.deepPurple,
+                          ),
+                        ),
                       ),
                     ),
-                    labelText: 'First Name',
-                    labelStyle: TextStyle(
-                      color: Colors.grey.shade800,
-                      fontSize: 16,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    prefixIcon: const Icon(
-                      Icons.person,
-                      color: Colors.deepPurple,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                TextFormField(
-                  controller: profileController.lastNameController,
-                  decoration: InputDecoration(
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                        width: 2,
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: TextFormField(
+                        controller: profileController.lastNameController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Last name is required';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Last Name',
+                          labelStyle: TextStyle(
+                            color: Colors.grey.shade800,
+                            fontSize: 16,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          prefixIcon: const Icon(
+                            Icons.person_2_sharp,
+                            color: Colors.deepPurple,
+                          ),
+                        ),
                       ),
                     ),
-                    labelText: 'Last Name',
-                    labelStyle: TextStyle(
-                      color: Colors.grey.shade800,
-                      fontSize: 16,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    prefixIcon: const Icon(
-                      Icons.person,
-                      color: Colors.deepPurple,
-                    ),
-                  ),
+                  ],
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: profileController.companyController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Company name is required';
+                    }
+                    return null;
+                  },
                   decoration: InputDecoration(
                     focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(
@@ -126,6 +147,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: profileController.emailController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Email is required';
+                    }
+                    return null;
+                  },
                   decoration: InputDecoration(
                     focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(
@@ -147,6 +174,49 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: profileController.passwordController,
+                  obscureText: profileController.isPassword,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Password is required';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                      focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey,
+                          width: 2,
+                        ),
+                      ),
+                      labelText: 'Password',
+                      labelStyle: TextStyle(
+                        color: Colors.grey.shade800,
+                        fontSize: 16,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.password,
+                        color: Colors.deepPurple,
+                      ),
+                      suffixIcon: IconButton(
+                        color: Colors.grey.shade800,
+                        onPressed: () {
+                          setState(() {
+                            profileController.isPassword =
+                                !profileController.isPassword;
+                          });
+                        },
+                        icon: Icon(profileController.isPassword
+                            ? Icons.visibility
+                            : Icons.visibility_off),
+                      )),
+                ),
+
                 const SizedBox(height: 20),
                 Center(
                   child: OutlinedButton(
