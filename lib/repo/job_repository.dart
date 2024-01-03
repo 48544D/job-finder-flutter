@@ -69,4 +69,14 @@ class JobRepository extends GetxController {
       rethrow;
     }
   }
+
+  void deleteJob(String jobId) {
+    try {
+      _firestore.collection('jobs').doc(jobId).delete();
+    } catch (e) {
+      // Handle any errors
+      print('Error deleting Job: $e');
+      rethrow;
+    }
+  }
 }

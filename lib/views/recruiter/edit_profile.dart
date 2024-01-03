@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:job_finder/controllers/recruiter/profile_controller.dart';
-import 'package:job_finder/models/recruiter.dart';
 import 'package:job_finder/utils/scroll_view_height.dart';
 
 class EditProfilePage extends StatelessWidget {

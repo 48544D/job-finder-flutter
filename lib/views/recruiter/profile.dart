@@ -223,6 +223,22 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
     GestureDetector jobCard(String jobId, String jobTitle, String jobLocation,
         double jobSalary, DateTime jobDate) {
       return GestureDetector(
+        onLongPress: () {
+          Get.defaultDialog(
+            title: 'Delete Job',
+            middleText: 'Are you sure you want to delete this job?',
+            textConfirm: 'Yes',
+            textCancel: 'No',
+            confirmTextColor: Colors.white,
+            onConfirm: () {
+              controller.deleteJob(jobId);
+              Get.back();
+            },
+            onCancel: () {
+              Get.back();
+            },
+          );
+        },
         onTap: () {
           Get.toNamed('/recruiter/posts/appliants', arguments: jobId);
         },

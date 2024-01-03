@@ -30,11 +30,10 @@ class JobApplicationsRepository extends GetxController {
         return null;
       }
 
-      final data = document.docs
-          .map((e) => JobApplicationModel.fromSnapshot(e))
-          .toList();
+      final data =
+          document.docs.map((e) => JobApplicationModel.fromSnapshot(e)).single;
 
-      return data[0];
+      return data;
     } catch (e) {
       // Handle any errors
       print('Error getting Job: $e');

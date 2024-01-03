@@ -46,15 +46,42 @@ class ProfileController extends GetxController {
   }
 
   void updateProfile() {
-    if (formKey.currentState!.validate()) {
-      formKey.currentState!.save();
+    try {
+      if (!formKey.currentState!.validate()) {
+        return;
+      }
       recruiterRepo.updateRecruiter(
         firstNameController.text,
         lastNameController.text,
         emailController.text,
         companyController.text,
       );
-      Get.back();
+      Get.snackbar('Success', 'Profile updated successfully',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP);
+      Get.offNamed('/recruiter/profile');
+    } catch (e) {
+      Get.snackbar('Error', e.toString(),
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP);
+    }
+  }
+
+  void deleteJob(String jobId) {
+    try {
+      jobsRepo.deleteJob(jobId);
+      Get.snackbar('Success', 'Job deleted successfully',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP);
+      Get.offNamed('/recruiter/profile');
+    } catch (e) {
+      Get.snackbar('Error', e.toString(),
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP);
     }
   }
 }

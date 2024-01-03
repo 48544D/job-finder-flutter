@@ -8,7 +8,7 @@ class RecruiterRepository extends GetxController {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> createUser(RecruiterModel recruiter) async {
+  Future<void> createRecruiter(RecruiterModel recruiter) async {
     try {
       await _firestore
           .collection('recruiters')

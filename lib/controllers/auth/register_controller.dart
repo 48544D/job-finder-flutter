@@ -113,7 +113,7 @@ class RegisterController extends GetxController {
       );
 
       final recruiterRepo = Get.put(RecruiterRepository());
-      await recruiterRepo.createUser(recruiter);
+      await recruiterRepo.createRecruiter(recruiter);
 
       // clear text editing controllers
       emailController.clear();
