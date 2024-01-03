@@ -1,23 +1,38 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:job_finder/controllers/recruiter/job_controller.dart';
 import 'package:job_finder/utils/scroll_view_height.dart';
 
-class PostJobForm extends StatefulWidget {
-  const PostJobForm({super.key});
+class EditJobPage extends StatefulWidget {
+  const EditJobPage({super.key});
 
   @override
-  PostJobFormState createState() => PostJobFormState();
+  State<EditJobPage> createState() => _EditJobPageState();
 }
 
-class PostJobFormState extends State<PostJobForm> {
+class _EditJobPageState extends State<EditJobPage> {
   final jobController = Get.put(JobController());
+  final jobId = Get.arguments;
+
+  @override
+  void initState() {
+    super.initState();
+    jobController.getJobById(jobId).then((job) {
+      log('job: $job');
+      jobController.titleController.text = job.title;
+      jobController.descriptionController.text = job.description;
+      jobController.locationController.text = job.location;
+      jobController.salaryController.text = job.salary.toString();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Post a Job',
+        title: const Text('Edit Job',
             style: TextStyle(fontSize: 20, color: Colors.white)),
         centerTitle: true,
         leading: IconButton(
@@ -45,7 +60,7 @@ class PostJobFormState extends State<PostJobForm> {
                 ),
                 // const SizedBox(height: 16.0),
                 Text(
-                  'Post a job to find the best candidate for your company',
+                  'Edit this job information',
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey.shade700,
@@ -177,7 +192,7 @@ class PostJobFormState extends State<PostJobForm> {
                   },
                   controller: jobController.descriptionController,
                 ),
-                const SizedBox(height: 20.0),
+                const SizedBox(height: 20),
                 Center(
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(
@@ -193,9 +208,11 @@ class PostJobFormState extends State<PostJobForm> {
                       ),
                     ),
                     onPressed: () {
-                      jobController.postJob();
+                      // Save changes
+                      jobController.updateJob(jobId);
+                      Get.back();
                     },
-                    child: const Text('Post Job',
+                    child: const Text('Save',
                         style:
                             TextStyle(fontSize: 20, color: Colors.deepPurple)),
                   ),

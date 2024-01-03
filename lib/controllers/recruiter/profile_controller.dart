@@ -68,20 +68,4 @@ class ProfileController extends GetxController {
           snackPosition: SnackPosition.TOP);
     }
   }
-
-  void deleteJob(String jobId) {
-    try {
-      jobsRepo.deleteJob(jobId);
-      Get.snackbar('Success', 'Job deleted successfully',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP);
-      Get.offNamed('/recruiter/profile');
-    } catch (e) {
-      Get.snackbar('Error', e.toString(),
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP);
-    }
-  }
 }

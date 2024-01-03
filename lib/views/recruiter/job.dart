@@ -39,6 +39,21 @@ class AppliantsPageState extends State<AppliantsPage> {
             ),
           ),
           elevation: 0,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.edit_note,
+                  size: 30,
+                ),
+                color: Colors.white,
+                onPressed: () {
+                  Get.toNamed('/recruiter/edit-job', arguments: jobId);
+                },
+              ),
+            )
+          ],
         ),
         body: SafeArea(
           top: true,
