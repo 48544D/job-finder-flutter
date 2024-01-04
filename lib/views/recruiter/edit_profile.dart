@@ -191,7 +191,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           width: 2,
                         ),
                       ),
-                      labelText: 'Password',
+                      labelText: 'Confirm your password',
                       labelStyle: TextStyle(
                         color: Colors.grey.shade800,
                         fontSize: 16,
