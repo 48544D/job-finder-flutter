@@ -121,6 +121,9 @@ class JobController extends GetxController {
         double.parse(salaryController.text),
       );
 
+      // clear text editing controllers
+      clearFields();
+
       Get.snackbar('Success', 'Job updated successfully',
           backgroundColor: Colors.green,
           colorText: Colors.white,
@@ -132,5 +135,12 @@ class JobController extends GetxController {
           colorText: Colors.white,
           snackPosition: SnackPosition.TOP);
     }
+  }
+
+  void clearFields() {
+    titleController.clear();
+    descriptionController.clear();
+    locationController.clear();
+    salaryController.clear();
   }
 }

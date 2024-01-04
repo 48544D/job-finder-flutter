@@ -20,7 +20,6 @@ class _EditJobPageState extends State<EditJobPage> {
   void initState() {
     super.initState();
     jobController.getJobById(jobId).then((job) {
-      log('job: $job');
       jobController.titleController.text = job.title;
       jobController.descriptionController.text = job.description;
       jobController.locationController.text = job.location;
@@ -38,6 +37,7 @@ class _EditJobPageState extends State<EditJobPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
+            jobController.clearFields();
             Get.back();
           },
         ),
