@@ -235,7 +235,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     onPressed: () {
                       // Save changes
                       profileController.updateProfile();
-                      Get.back();
                     },
                     child: const Text('Save',
                         style:

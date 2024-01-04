@@ -83,11 +83,12 @@ class ProfileController extends GetxController {
       Get.offNamed('/recruiter/profile');
     } catch (e) {
       if (e is FirebaseAuthException) {
-        if (e.code == 'invalid-credential') {
+        if (e.code == 'invalid-credential' || e.code == 'wrong-password') {
           Get.snackbar('Error', 'Invalid password',
               backgroundColor: Colors.red,
               colorText: Colors.white,
               snackPosition: SnackPosition.TOP);
+
           return;
         }
       }
