@@ -55,100 +55,135 @@ class AppliantsPageState extends State<AppliantsPage> {
             )
           ],
         ),
-        body: SafeArea(
-          top: true,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
-                  child: Container(
-                    width: MediaQuery.sizeOf(context).width,
-                    decoration: const BoxDecoration(
-                      color: Colors.deepPurple,
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 5,
-                          color: Color(0x32171717),
-                          offset: Offset(0, 2),
-                        )
-                      ],
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(16),
-                        bottomRight: Radius.circular(16),
-                        topLeft: Radius.circular(0),
-                        topRight: Radius.circular(0),
-                      ),
-                    ),
-                    child: Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
-                      child: FutureBuilder(
-                          future: appliantsController.getJob(jobId),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            } else {
-                              final job = snapshot.data as JobModel;
-                              return topSection(job);
-                            }
-                          }),
-                    ),
-                  ),
+        body: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Container(
+              width: MediaQuery.sizeOf(context).width,
+              decoration: const BoxDecoration(
+                color: Colors.deepPurple,
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 5,
+                    color: Color(0x32171717),
+                    offset: Offset(0, 2),
+                  )
+                ],
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(16),
+                  bottomRight: Radius.circular(16),
+                  topLeft: Radius.circular(0),
+                  topRight: Radius.circular(0),
                 ),
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+              child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
+                child: FutureBuilder(
+                    future: appliantsController.getJob(jobId),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        final job = snapshot.data as JobModel;
+                        return topSection(job);
+                      }
+                    }),
+              ),
+            ),
+            Expanded(
+              child: DefaultTabController(
+                length: 2,
+                child: Column(
                   children: [
-                    const Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                      child: Text(
-                        'Appliants',
+                    const TabBar(tabs: [
+                      Tab(
+                        text: 'Pending appliants',
                       ),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 24),
-                      child: FutureBuilder(
-                          future: appliantsController.getAppliants(jobId),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            } else {
-                              List appliants = snapshot.data as List;
-                              if (appliants.isEmpty) {
-                                return const Center(
-                                  child: Text('No appliants yet',
-                                      style: TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.w500,
-                                      )),
-                                );
-                              }
-                              return Column(
-                                children: [
-                                  for (var i = 0; i < appliants.length; i++)
-                                    appliantCard(context, appliants[i]),
-                                ],
-                              );
-                            }
-                          }),
+                      Tab(
+                        text: 'Accepted appliants',
+                      ),
+                    ]),
+                    Expanded(
+                      child: TabBarView(children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 16.0, left: 16.0, right: 16.0),
+                          child: pendingAppliants(),
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.only(
+                                top: 16.0, left: 16.0, right: 16.0),
+                            child: acceptedAppliants()),
+                      ]),
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );
+  }
+
+  FutureBuilder pendingAppliants() {
+    return FutureBuilder(
+        future: appliantsController.getAppliants(jobId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            List appliants = snapshot.data as List;
+            if (appliants.isEmpty) {
+              return const Center(
+                child: Text('No appliants yet',
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w500,
+                    )),
+              );
+            }
+            return ListView(
+              children: [
+                for (var i = 0; i < appliants.length; i++)
+                  appliantCard(context, appliants[i], false),
+              ],
+            );
+          }
+        });
+  }
+
+  FutureBuilder acceptedAppliants() {
+    return FutureBuilder(
+        future: appliantsController.getAcceptedAppliants(jobId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            List appliants = snapshot.data as List;
+            if (appliants.isEmpty) {
+              return const Center(
+                child: Text('No appliants yet',
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w500,
+                    )),
+              );
+            }
+            return ListView(
+              children: [
+                for (var i = 0; i < appliants.length; i++)
+                  appliantCard(context, appliants[i], true),
+              ],
+            );
+          }
+        });
   }
 
   Column topSection(JobModel job) {
@@ -227,7 +262,8 @@ class AppliantsPageState extends State<AppliantsPage> {
     );
   }
 
-  Padding appliantCard(BuildContext context, UserModel appliant) {
+  Padding appliantCard(
+      BuildContext context, UserModel appliant, bool isAccepted) {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 8),
       child: Container(
@@ -278,6 +314,8 @@ class AppliantsPageState extends State<AppliantsPage> {
                     children: [
                       Text(
                         '${appliant.firstName} ${appliant.lastName}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 18,
@@ -288,6 +326,8 @@ class AppliantsPageState extends State<AppliantsPage> {
                             const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
                         child: Text(
                           appliant.email,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: Colors.grey.shade600,
                             fontSize: 14,
@@ -298,10 +338,53 @@ class AppliantsPageState extends State<AppliantsPage> {
                   ),
                 ),
               ),
+              // accept appliant icon
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
+                child: !isAccepted
+                    ? confirmAppliantButton(appliant)
+                    : unconfirmAppliantButton(appliant),
+              ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  IconButton confirmAppliantButton(UserModel appliant) {
+    return IconButton(
+      onPressed: () async {
+        await appliantsController.confirmAppliant(jobId, appliant.id);
+        setState(() {});
+      },
+      icon: CircleAvatar(
+        backgroundColor: Colors.grey.shade200,
+        child: const Icon(
+          Icons.check,
+          color: Colors.green,
+          size: 30,
+        ),
+      ),
+      iconSize: 30,
+    );
+  }
+
+  IconButton unconfirmAppliantButton(UserModel appliant) {
+    return IconButton(
+      onPressed: () async {
+        await appliantsController.unconfirmAppliant(jobId, appliant.id);
+        setState(() {});
+      },
+      icon: CircleAvatar(
+        backgroundColor: Colors.grey.shade200,
+        child: const Icon(
+          Icons.close,
+          color: Colors.red,
+          size: 30,
+        ),
+      ),
+      iconSize: 30,
     );
   }
 }

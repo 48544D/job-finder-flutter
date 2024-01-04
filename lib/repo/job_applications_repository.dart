@@ -55,4 +55,52 @@ class JobApplicationsRepository extends GetxController {
       rethrow;
     }
   }
+
+  confirmAppliant(String jobId, String id) async {
+    try {
+      await _firestore
+          .collection('jobApplications')
+          .where('jobId', isEqualTo: jobId)
+          .get()
+          .then((value) {
+        final document = value.docs.single;
+        final data = document.data();
+        final applicantsId = data['applicantsId'];
+        final acceptedApplicantsIds = data['acceptedApplicantsIds'];
+        applicantsId.remove(id);
+        acceptedApplicantsIds.add(id);
+        _firestore.collection('jobApplications').doc(document.id).update({
+          'applicantsId': applicantsId,
+          'acceptedApplicantsIds': acceptedApplicantsIds
+        });
+      });
+    } catch (e) {
+      print('Error confirming appliant: $e');
+      rethrow;
+    }
+  }
+
+  unconfirmAppliant(String jobId, String id) async {
+    try {
+      await _firestore
+          .collection('jobApplications')
+          .where('jobId', isEqualTo: jobId)
+          .get()
+          .then((value) {
+        final document = value.docs.single;
+        final data = document.data();
+        final applicantsId = data['applicantsId'];
+        final acceptedApplicantsIds = data['acceptedApplicantsIds'];
+        acceptedApplicantsIds.remove(id);
+        applicantsId.add(id);
+        _firestore.collection('jobApplications').doc(document.id).update({
+          'applicantsId': applicantsId,
+          'acceptedApplicantsIds': acceptedApplicantsIds
+        });
+      });
+    } catch (e) {
+      print('Error confirming appliant: $e');
+      rethrow;
+    }
+  }
 }

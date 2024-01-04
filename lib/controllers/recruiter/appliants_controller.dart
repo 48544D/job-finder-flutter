@@ -44,4 +44,46 @@ class AppliantsController extends GetxController {
       rethrow;
     }
   }
+
+  confirmAppliant(String jobId, String id) async {
+    try {
+      await jobApplicationsRepo.confirmAppliant(jobId, id);
+    } catch (e) {
+      print('Error confirming appliant: $e');
+      rethrow;
+    }
+  }
+
+  getAcceptedAppliants(String jobId) async {
+    try {
+      JobApplicationModel? jobApplication =
+          await jobApplicationsRepo.getJobApplicationByJobId(jobId);
+
+      List acceptedApplicantsIds = jobApplication?.acceptedApplicantsIds ?? [];
+      if (acceptedApplicantsIds.isEmpty) {
+        return [];
+      }
+
+      List<UserModel> acceptedAppliants = [];
+      for (var i = 0; i < acceptedApplicantsIds.length; i++) {
+        final acceptedAppliant =
+            await userRepo.getUserById(acceptedApplicantsIds[i]);
+        acceptedAppliants.add(acceptedAppliant);
+      }
+
+      return acceptedAppliants;
+    } catch (e) {
+      print('Error getting appliants: $e');
+      rethrow;
+    }
+  }
+
+  unconfirmAppliant(String jobId, String id) async {
+    try {
+      await jobApplicationsRepo.unconfirmAppliant(jobId, id);
+    } catch (e) {
+      print('Error unconfirming appliant: $e');
+      rethrow;
+    }
+  }
 }
