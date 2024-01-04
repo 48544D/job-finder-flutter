@@ -305,37 +305,37 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
       );
     }
 
-    Container searchBar() {
-      return Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.grey[200],
-        ),
-        child: Row(
-          children: [
-            const Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search',
-                  border: InputBorder.none,
-                  fillColor: Colors.grey,
-                ),
-              ),
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.search,
-                color: Colors.deepPurple,
-              ),
-              onPressed: () {},
-            ),
-          ],
-        ),
-      );
-    }
+    // Container searchBar() {
+    //   return Container(
+    //     padding: const EdgeInsets.symmetric(
+    //       horizontal: 10,
+    //     ),
+    //     decoration: BoxDecoration(
+    //       borderRadius: BorderRadius.circular(20),
+    //       color: Colors.grey[200],
+    //     ),
+    //     child: Row(
+    //       children: [
+    //         const Expanded(
+    //           child: TextField(
+    //             decoration: InputDecoration(
+    //               hintText: 'Search',
+    //               border: InputBorder.none,
+    //               fillColor: Colors.grey,
+    //             ),
+    //           ),
+    //         ),
+    //         IconButton(
+    //           icon: const Icon(
+    //             Icons.search,
+    //             color: Colors.deepPurple,
+    //           ),
+    //           onPressed: () {},
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // }
 
     return Container(
       constraints: BoxConstraints(
@@ -363,8 +363,8 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
       child: Column(
         children: [
           bottomCardHeader(),
-          const SizedBox(height: 10),
-          searchBar(),
+          // const SizedBox(height: 10),
+          // searchBar(),
           const SizedBox(height: 20),
           // jobs list
           FutureBuilder(
