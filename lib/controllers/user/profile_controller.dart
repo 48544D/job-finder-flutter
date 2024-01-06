@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:job_finder/controllers/home_page_controller.dart';
@@ -19,6 +20,8 @@ class UserProfileController extends GetxController {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  bool isPassword = false;
   final formKey = GlobalKey<FormState>();
   late UserModel user;
 
@@ -61,9 +64,50 @@ class UserProfileController extends GetxController {
     const HomePage();
   }
 
-  updateUser(uid) async {
-    final uid = authController.currentUser!.uid;
-    return userRepo.updateUserById(uid);
+  void clearFields() {
+    firstNameController.clear();
+    lastNameController.clear();
+    emailController.clear();
+    passwordController.clear();
+  }
+
+  void updateProfile() async {
+    try {
+      if (!formKey.currentState!.validate()) {
+        return;
+      }
+
+      // Create a credential with the user's email and password
+      await authController.updateEmail(
+          email: emailController.text, password: passwordController.text);
+
+      userRepo.updateUser(
+        firstNameController.text,
+        lastNameController.text,
+        emailController.text,
+      );
+
+      // clear text editing controllers
+      clearFields();
+
+      Get.snackbar('Success', 'Profile updated successfully',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP);
+      Get.offNamed('/user/profile');
+    } catch (e) {
+      if (e is FirebaseAuthException) {
+        if (e.code == 'invalid-credential' || e.code == 'wrong-password') {
+          Get.snackbar('Error', 'Invalid password',
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+              snackPosition: SnackPosition.TOP);
+
+          return;
+        }
+      }
+      throw e;
+    }
   }
 }
 

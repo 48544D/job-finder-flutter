@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:job_finder/models/user.dart';
+import 'package:job_finder/utils/authentication.dart';
 
 class UserRepository extends GetxController {
   static UserRepository get instance => Get.find();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final authController = Get.put(Authentication());
 
   Future<void> createUser(UserModel user) async {
     try {
@@ -58,8 +60,6 @@ class UserRepository extends GetxController {
     }
   }
 
-
-
 // Future<List<UserModel>> updateUser(String uid)async{
 //   try{
 //     final document = await _firestore.collection('users').get();
@@ -70,9 +70,9 @@ class UserRepository extends GetxController {
 //     rethrow;
 //   }
 // }
-  
-    Future<UserModel> updateUserById(String userId) async {
-      try {
+
+  Future<UserModel> updateUserById(String userId) async {
+    try {
       final document = await _firestore.collection('users').doc(userId).get();
 
       return UserModel.fromSnapshot(document);
@@ -81,5 +81,20 @@ class UserRepository extends GetxController {
       print('Error getting user: $e');
       rethrow;
     }
+  }
+
+  void updateUser(String firstName, String lastName, String email) {
+    try {
+      final uid = authController.currentUser!.uid;
+      _firestore.collection('users').doc(uid).update({
+        'firstName': firstName,
+        'lastName': lastName,
+        'email': email,
+      });
+    } catch (e) {
+      // Handle any errors
+      print('Error updating user: $e');
+      rethrow;
     }
+  }
 }
