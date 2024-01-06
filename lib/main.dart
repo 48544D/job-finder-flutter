@@ -14,6 +14,7 @@ import 'package:job_finder/views/recruiter/post_job.dart';
 import 'package:job_finder/views/recruiter/profile.dart';
 import 'package:job_finder/views/user/edit_profil.dart';
 import 'package:job_finder/views/user/home_page_user.dart';
+import 'package:job_finder/views/user/job_details.dart';
 // import 'package:job_finder/views/user/job_List.dart';
 import 'package:job_finder/views/user/profile.dart';
 
@@ -54,7 +55,7 @@ class MyApp extends StatelessWidget {
           '/user/edit-profile': (context) => const EditUserProfilePage(),
           '/user/home_page_user': (context) => HomePageUser(),
           // '/user/job_list': (context) => const JobList(),
-          // '/user/job_details': (context) => const JobDetails(),
+          '/user/job_details': (context) => const JobDetails(),
         });
   }
 }

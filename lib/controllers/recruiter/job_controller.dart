@@ -136,4 +136,6 @@ class JobController extends GetxController {
     locationController.clear();
     salaryController.clear();
   }
+
+  void applyToJob(jobId) {}
 }
