@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:job_finder/controllers/user/profile_controller.dart';
 import 'package:job_finder/utils/scroll_view_height.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:job_finder/views/user/profile.dart';
 
 class EditUserProfilePage extends StatefulWidget {
   const EditUserProfilePage({Key? key}) : super(key: key);
@@ -16,7 +15,7 @@ class EditUserProfilePage extends StatefulWidget {
 
 class _EditUserProfilePageState extends State<EditUserProfilePage> {
   final profileController = Get.put(UserProfileController());
-    final uid = Get.arguments;
+  final uid = Get.arguments;
 
   @override
   Widget build(BuildContext context) {
@@ -150,11 +149,12 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                     //   Get.back();
                     // },
                     onPressed: () async {
-                              var result = await FilePicker.platform.pickFiles(type: FileType.custom);
-                              if (result != null) {
-                                File cv = File(result.files.single.path!);
-                                profileController.updateUser(uid);
-                              }
+                      var result = await FilePicker.platform
+                          .pickFiles(type: FileType.custom);
+                      if (result != null) {
+                        File cv = File(result.files.single.path!);
+                        profileController.updateUser(uid);
+                      }
 
                       Get.back();
                     },

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:job_finder/models/jobs.dart';
 
-class JobCard extends StatelessWidget {
+class JobDetails extends StatelessWidget {
   final JobModel job;
 
-  const JobCard({required this.job});
+  const JobDetails({required this.job});
 
   @override
   Widget build(BuildContext context) {

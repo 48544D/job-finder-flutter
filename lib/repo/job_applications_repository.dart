@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get/get.dart';
 import 'package:job_finder/models/job_applications.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 
 class JobApplicationsRepository extends GetxController {
   static JobApplicationsRepository get instance => Get.find();
@@ -37,7 +41,56 @@ class JobApplicationsRepository extends GetxController {
     }
   }
 
-  Future<List<JobApplicationModel>> getAllJobApplications(String uid) async {
+  Stream<List<String>> getJobsIdsByUserId(String userId) async* {
+    try {
+      final CollectionReference jobApplicationsCollection =
+          _firestore.collection('jobApplications');
+
+      Stream<List<String>> acceptedApplicantsStream = jobApplicationsCollection
+          .where('acceptedApplicantsIds', arrayContains: userId)
+          .snapshots()
+          .map((querySnapshot) =>
+              querySnapshot.docs.map((doc) => doc['jobId'] as String).toList());
+
+      Stream<List<String>> applicantsStream = jobApplicationsCollection
+          .where('applicantsId', arrayContains: userId)
+          .snapshots()
+          .map((querySnapshot) =>
+              querySnapshot.docs.map((doc) => doc['jobId'] as String).toList());
+
+      // Combine both streams manually
+      StreamController<List<String>> controller =
+          StreamController<List<String>>();
+
+      StreamSubscription<List<String>> acceptedApplicantsSubscription;
+      StreamSubscription<List<String>> applicantsSubscription;
+
+      acceptedApplicantsSubscription =
+          acceptedApplicantsStream.listen((List<String> jobIds) {
+        controller.add(jobIds);
+      });
+
+      applicantsSubscription = applicantsStream.listen((List<String> jobIds) {
+        controller.add(jobIds);
+      });
+
+      // Cancel subscriptions when stream is closed
+      controller.onCancel = () {
+        acceptedApplicantsSubscription.cancel();
+        applicantsSubscription.cancel();
+      };
+
+      await for (List<String> mergedJobIds in controller.stream) {
+        yield mergedJobIds;
+      }
+    } catch (e) {
+      // Handle any errors
+      print('Error getting Jobs: $e');
+      throw e;
+    }
+  }
+
+  Future<List<JobApplicationModel>> getAllJobApplications() async {
     try {
       final document = await _firestore.collection('jobApplications').get();
       final data = document.docs

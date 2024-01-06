@@ -7,7 +7,6 @@ import 'package:job_finder/repo/user_repository.dart';
 import 'package:job_finder/utils/authentication.dart';
 import 'package:job_finder/views/auth/login.dart';
 import 'package:job_finder/views/recruiter/profile.dart';
-import 'package:job_finder/views/user/home_page_user.dart';
 import 'package:job_finder/views/user/profile.dart';
 
 class HomePage extends StatelessWidget {
@@ -69,7 +68,7 @@ class HomePage extends StatelessWidget {
                   if (snapshot.data == true) {
                     return const UserProfilePage();
                   } else {
-                    return const UserProfilePage();
+                    return const Text("Error");
                   }
                 } else {
                   return const Center(

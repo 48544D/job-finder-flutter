@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:job_finder/controllers/home_page_controller.dart';
-import 'package:job_finder/controllers/recruiter/job_controller.dart';
-import 'package:job_finder/controllers/recruiter/profile_controller.dart';
 import 'package:job_finder/controllers/user/job_controller.dart';
 import 'package:job_finder/controllers/user/profile_controller.dart';
 import 'package:job_finder/models/user.dart';
@@ -13,10 +11,10 @@ class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
 
   @override
-  UserProfilePageState createState() => UserProfilePageState();
+  State<UserProfilePage> createState() => _UserProfilePageState();
 }
 
-class UserProfilePageState extends State<UserProfilePage> {
+class _UserProfilePageState extends State<UserProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Background(child: _body(context));
@@ -25,7 +23,6 @@ class UserProfilePageState extends State<UserProfilePage> {
   Widget _body(context) {
     final userprofilecontroller = Get.put(UserProfileController());
     final userjobController = Get.put(UserJobController());
-    final jobR=Get.put(JobController());
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -42,7 +39,7 @@ class UserProfilePageState extends State<UserProfilePage> {
               children: [
                 _appbar(),
                 _topCard(userprofilecontroller),
-                _bottomCard(userprofilecontroller,userjobController),
+                _bottomCard(userprofilecontroller, userjobController),
               ],
             ),
           ),
@@ -107,6 +104,13 @@ class UserProfilePageState extends State<UserProfilePage> {
                   color: Colors.black,
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                user.email,
+                style: TextStyle(
+                  color: Colors.black.withOpacity(0.8),
+                  fontSize: 15,
                 ),
               ),
               const SizedBox(height: 20),
@@ -178,52 +182,44 @@ class UserProfilePageState extends State<UserProfilePage> {
       );
     }
 
-    return FutureBuilder(
-      future: controller.getUserData(),
+    return StreamBuilder(
+      stream: controller.getUserData(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const loadingAnimation();
+        } else {
           if (snapshot.hasData) {
             UserModel user = snapshot.data as UserModel;
             return topCardContent(height, userInfo, user, profilePicture);
           } else {
-              return const HomePage();
+            return const HomePage();
           }
-        } else {
-          return const loadingAnimation();
         }
       },
     );
   }
-  
 
-  Widget _bottomCard(userprofilecontroller,userjobController) {
+  Widget _bottomCard(userprofilecontroller, userjobController) {
     double innerHeight = MediaQuery.of(context).size.height * 0.5;
 
-    Row bottomCardHeader() {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text('Your applied',
-              style: TextStyle(
-                color: Colors.deepPurple,
-                fontSize: 27,
-                fontWeight: FontWeight.w500,
-              )),
-          IconButton(
-              onPressed: () {
-                Get.toNamed('/user/job_list');
-              },
-              icon: const Icon(Icons.add_circle_outline,
-                  color: Colors.deepPurple)),
-        ],
+    SizedBox bottomCardHeader() {
+      return const SizedBox(
+        width: double.infinity,
+        child: Text('Your applications',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              color: Colors.deepPurple,
+              fontSize: 27,
+              fontWeight: FontWeight.w500,
+            )),
       );
     }
-     GestureDetector jobCard(String jobId, String jobTitle, String jobLocation,
+
+    GestureDetector jobCard(String jobId, String jobTitle, String jobLocation,
         double jobSalary, DateTime jobDate) {
       return GestureDetector(
-        onLongPress: () {},
         onTap: () {
-          Get.toNamed('/user/job_Card', arguments: jobId);
+          Get.toNamed('/user/job_details', arguments: jobId);
         },
         child: Container(
           decoration: BoxDecoration(
@@ -295,7 +291,7 @@ class UserProfilePageState extends State<UserProfilePage> {
       );
     }
 
-   return Container(
+    return Container(
       constraints: BoxConstraints(
         minHeight: innerHeight,
       ),
@@ -321,11 +317,26 @@ class UserProfilePageState extends State<UserProfilePage> {
       child: Column(
         children: [
           bottomCardHeader(),
+          const SizedBox(height: 10),
           // jobs list
-          FutureBuilder(
-              future: userprofilecontroller.getUserJobs,
+          StreamBuilder(
+              stream: userprofilecontroller.getUserJobs(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const loadingAnimation();
+                } else {
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: Text(
+                        'No jobs applied yet',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    );
+                  }
                   List jobs = snapshot.data as List;
                   if (jobs.isNotEmpty) {
                     return Column(mainAxisSize: MainAxisSize.max, children: [
@@ -355,8 +366,6 @@ class UserProfilePageState extends State<UserProfilePage> {
                       ),
                     );
                   }
-                } else {
-                  return const loadingAnimation();
                 }
               }),
         ],
