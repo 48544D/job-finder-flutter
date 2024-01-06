@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:job_finder/controllers/recruiter/job_controller.dart';
+import 'package:job_finder/models/jobs.dart';
 import 'package:job_finder/utils/scroll_view_height.dart';
 
 class EditJobPage extends StatefulWidget {
@@ -13,17 +14,6 @@ class EditJobPage extends StatefulWidget {
 class _EditJobPageState extends State<EditJobPage> {
   final jobController = Get.put(JobController());
   final jobId = Get.arguments;
-
-  @override
-  void initState() {
-    super.initState();
-    jobController.getJobById(jobId).then((job) {
-      jobController.titleController.text = job.title;
-      jobController.descriptionController.text = job.description;
-      jobController.locationController.text = job.location;
-      jobController.salaryController.text = job.salary.toString();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +34,26 @@ class _EditJobPageState extends State<EditJobPage> {
       body: ScrollViewWithHeight(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Form(
+          child: editForm(),
+        ),
+      ),
+    );
+  }
+
+  StreamBuilder editForm() {
+    return StreamBuilder(
+        stream: jobController.getJobById(jobId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final job = snapshot.data as JobModel;
+          jobController.titleController.text = job.title;
+          jobController.descriptionController.text = job.description;
+          jobController.locationController.text = job.location;
+          jobController.salaryController.text = job.salary.toString();
+
+          return Form(
             key: jobController.formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,9 +226,7 @@ class _EditJobPageState extends State<EditJobPage> {
                 ),
               ],
             ),
-          ),
-        ),
-      ),
-    );
+          );
+        });
   }
 }

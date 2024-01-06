@@ -35,9 +35,9 @@ class AppliantsController extends GetxController {
     }
   }
 
-  Future<JobModel> getJob(String jobId) async {
+  Stream<JobModel> getJob(String jobId) {
     try {
-      final job = await jobRepo.getJobById(jobId);
+      final job = jobRepo.getJobById(jobId);
       return job;
     } catch (e) {
       print('Error getting job: $e');

@@ -78,8 +78,8 @@ class AppliantsPageState extends State<AppliantsPage> {
               ),
               child: Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
-                child: FutureBuilder(
-                    future: appliantsController.getJob(jobId),
+                child: StreamBuilder(
+                    stream: appliantsController.getJob(jobId),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
