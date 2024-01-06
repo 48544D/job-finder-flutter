@@ -32,11 +32,12 @@ class UserRepository extends GetxController {
     }
   }
 
-  Future<UserModel> getUserById(String userId) async {
+  Stream<UserModel> getUserById(String userId) {
     try {
-      final document = await _firestore.collection('users').doc(userId).get();
+      final document = _firestore.collection('users').doc(userId).snapshots();
+      final data = document.map((e) => UserModel.fromSnapshot(e));
 
-      return UserModel.fromSnapshot(document);
+      return data;
     } catch (e) {
       // Handle any errors
       print('Error getting user: $e');

@@ -15,6 +15,9 @@ class AppliantsPage extends StatefulWidget {
 class AppliantsPageState extends State<AppliantsPage> {
   final appliantsController = Get.put(AppliantsController());
   final jobId = Get.arguments.toString();
+  late Widget currentTab = pendingAppliants();
+  List tabsNames = ['Pending', 'Accepted'];
+  int selected = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -93,33 +96,63 @@ class AppliantsPageState extends State<AppliantsPage> {
               ),
             ),
             Expanded(
-              child: DefaultTabController(
-                length: 2,
-                child: Column(
-                  children: [
-                    const TabBar(tabs: [
-                      Tab(
-                        text: 'Pending appliants',
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 60,
+                    child: Center(
+                      child: ListView.builder(
+                        itemCount: 2,
+                        physics: const BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemBuilder: (ctx, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selected = index;
+                                if (index == 0) {
+                                  currentTab = pendingAppliants();
+                                } else {
+                                  currentTab = acceptedAppliants();
+                                }
+                              });
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: selected == index
+                                      ? Colors.deepPurple
+                                      : Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    tabsNames[index],
+                                    style: TextStyle(
+                                      color: selected == index
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                      Tab(
-                        text: 'Accepted appliants',
-                      ),
-                    ]),
-                    Expanded(
-                      child: TabBarView(children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 16.0, left: 16.0, right: 16.0),
-                          child: pendingAppliants(),
-                        ),
-                        Padding(
-                            padding: const EdgeInsets.only(
-                                top: 16.0, left: 16.0, right: 16.0),
-                            child: acceptedAppliants()),
-                      ]),
                     ),
-                  ],
-                ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          top: 16.0, left: 16.0, right: 16.0),
+                      child: currentTab,
+                    ),
+                  ),
+                ],
               ),
             )
           ],
@@ -128,17 +161,16 @@ class AppliantsPageState extends State<AppliantsPage> {
     );
   }
 
-  FutureBuilder pendingAppliants() {
-    return FutureBuilder(
-        future: appliantsController.getAppliants(jobId),
+  StreamBuilder pendingAppliants() {
+    return StreamBuilder(
+        stream: appliantsController.getAppliants(jobId).asBroadcastStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           } else {
-            List appliants = snapshot.data as List;
-            if (appliants.isEmpty) {
+            if (!snapshot.hasData) {
               return const Center(
                 child: Text('No appliants yet',
                     style: TextStyle(
@@ -147,6 +179,8 @@ class AppliantsPageState extends State<AppliantsPage> {
                     )),
               );
             }
+
+            List appliants = snapshot.data as List;
             return ListView(
               children: [
                 for (var i = 0; i < appliants.length; i++)
@@ -157,25 +191,27 @@ class AppliantsPageState extends State<AppliantsPage> {
         });
   }
 
-  FutureBuilder acceptedAppliants() {
-    return FutureBuilder(
-        future: appliantsController.getAcceptedAppliants(jobId),
+  StreamBuilder acceptedAppliants() {
+    return StreamBuilder(
+        stream: appliantsController.getAcceptedAppliants(jobId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           } else {
-            List appliants = snapshot.data as List;
-            if (appliants.isEmpty) {
+            if (!snapshot.hasData) {
               return const Center(
-                child: Text('No appliants yet',
+                child: Text('You haven\'t accepted any appliants yet',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.w500,
                     )),
               );
             }
+
+            List appliants = snapshot.data as List;
             return ListView(
               children: [
                 for (var i = 0; i < appliants.length; i++)

@@ -19,19 +19,15 @@ class JobApplicationsRepository extends GetxController {
     }
   }
 
-  Future<JobApplicationModel?> getJobApplicationByJobId(String jobId) async {
+  Stream<JobApplicationModel> getJobApplicationByJobId(String jobId) {
     try {
-      final document = await _firestore
+      final document = _firestore
           .collection('jobApplications')
           .where('jobId', isEqualTo: jobId)
-          .get();
-
-      if (document.docs.isEmpty) {
-        return null;
-      }
-
-      final data =
-          document.docs.map((e) => JobApplicationModel.fromSnapshot(e)).single;
+          .snapshots();
+      final data = document.map((e) => e.docs.map((e) {
+            return JobApplicationModel.fromSnapshot(e);
+          }).single);
 
       return data;
     } catch (e) {
