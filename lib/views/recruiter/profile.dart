@@ -225,7 +225,6 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
     GestureDetector jobCard(String jobId, String jobTitle, String jobLocation,
         double jobSalary, DateTime jobDate) {
       return GestureDetector(
-        onLongPress: () {},
         onTap: () {
           Get.toNamed('/recruiter/posts/appliants', arguments: jobId);
         },
@@ -264,8 +263,21 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
                   ),
                   IconButton(
                       onPressed: () {
-                        jobController.deleteJob(jobId);
-                        setState(() {});
+                        Get.defaultDialog(
+                          title: 'Delete Job',
+                          middleText:
+                              'Are you sure you want to delete this job?',
+                          textConfirm: 'Yes',
+                          textCancel: 'No',
+                          confirmTextColor: Colors.white,
+                          onConfirm: () {
+                            jobController.deleteJob(jobId);
+                            Get.close(1);
+                          },
+                          onCancel: () {
+                            Get.close(1);
+                          },
+                        );
                       },
                       icon: const Icon(Icons.delete, color: Colors.red)),
                 ],
@@ -365,7 +377,7 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
           bottomCardHeader(),
           // const SizedBox(height: 10),
           // searchBar(),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           // jobs list
           StreamBuilder(
               stream: profileController.getRecruiterJobs(),
