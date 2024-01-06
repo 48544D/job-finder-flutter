@@ -219,7 +219,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
         double jobSalary, DateTime jobDate) {
       return GestureDetector(
         onTap: () {
-          Get.toNamed('/user/job_details', arguments: jobId);
+          Get.toNamed('/user/job_details', arguments: {
+            'jobId': jobId,
+            'showApplyButton': false,
+          });
         },
         child: Container(
           decoration: BoxDecoration(

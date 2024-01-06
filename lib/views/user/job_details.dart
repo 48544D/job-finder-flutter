@@ -11,7 +11,8 @@ class JobDetails extends StatefulWidget {
 }
 
 class _JobDetailsState extends State<JobDetails> {
-  final jobId = Get.arguments;
+  final jobId = Get.arguments['jobId'];
+  final showApplyButton = Get.arguments['showApplyButton'];
   final jobController = Get.put(JobController());
 
   @override
@@ -139,27 +140,29 @@ class _JobDetailsState extends State<JobDetails> {
                       ),
                     ),
                     // apply to job button
-                    SizedBox(
-                      width: 300,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          jobController.applyToJob(jobId);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.deepPurple,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 32,
-                            vertical: 12,
+                    showApplyButton == false
+                        ? const SizedBox()
+                        : SizedBox(
+                            width: 300,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                jobController.applyToJob(jobId);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.deepPurple,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 32,
+                                  vertical: 12,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: const Text('Apply to job',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20)),
+                            ),
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: const Text('Apply to job',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20)),
-                      ),
-                    ),
                   ],
                 );
               }
