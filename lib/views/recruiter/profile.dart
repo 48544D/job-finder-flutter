@@ -181,10 +181,12 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
       );
     }
 
-    return FutureBuilder(
-        future: controller.getRecruiterData(),
+    return StreamBuilder(
+        stream: controller.getRecruiterData(),
         builder: ((context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const loadingAnimation();
+          } else {
             if (snapshot.hasData) {
               RecruiterModel recruiter = snapshot.data as RecruiterModel;
 
@@ -193,8 +195,6 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
             } else {
               return const HomePage();
             }
-          } else {
-            return const loadingAnimation();
           }
         }));
   }
@@ -225,7 +225,6 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
     GestureDetector jobCard(String jobId, String jobTitle, String jobLocation,
         double jobSalary, DateTime jobDate) {
       return GestureDetector(
-        onLongPress: () {},
         onTap: () {
           Get.toNamed('/recruiter/posts/appliants', arguments: jobId);
         },
@@ -264,8 +263,21 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
                   ),
                   IconButton(
                       onPressed: () {
-                        jobController.deleteJob(jobId);
-                        setState(() {});
+                        Get.defaultDialog(
+                          title: 'Delete Job',
+                          middleText:
+                              'Are you sure you want to delete this job?',
+                          textConfirm: 'Yes',
+                          textCancel: 'No',
+                          confirmTextColor: Colors.white,
+                          onConfirm: () {
+                            jobController.deleteJob(jobId);
+                            Get.close(1);
+                          },
+                          onCancel: () {
+                            Get.close(1);
+                          },
+                        );
                       },
                       icon: const Icon(Icons.delete, color: Colors.red)),
                 ],
@@ -365,12 +377,14 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
           bottomCardHeader(),
           // const SizedBox(height: 10),
           // searchBar(),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           // jobs list
-          FutureBuilder(
-              future: profileController.getRecruiterJobs(),
+          StreamBuilder(
+              stream: profileController.getRecruiterJobs(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const loadingAnimation();
+                } else {
                   List jobs = snapshot.data as List;
                   if (jobs.isNotEmpty) {
                     return Column(mainAxisSize: MainAxisSize.max, children: [
@@ -400,8 +414,6 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
                       ),
                     );
                   }
-                } else {
-                  return const loadingAnimation();
                 }
               }),
         ],

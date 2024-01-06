@@ -29,11 +29,12 @@ class JobRepository extends GetxController {
     }
   }
 
-  Future<JobModel> getJobById(String uid) async {
+  Stream<JobModel> getJobById(String uid) {
     try {
-      final document = await _firestore.collection('jobs').doc(uid).get();
+      final document = _firestore.collection('jobs').doc(uid).snapshots();
+      final data = document.map((e) => JobModel.fromSnapshot(e));
 
-      return JobModel.fromSnapshot(document);
+      return data;
     } catch (e) {
       // Handle any errors
       print('Error getting Job: $e');
@@ -41,13 +42,15 @@ class JobRepository extends GetxController {
     }
   }
 
-  Future<List<JobModel>> getJobsByRecruiter(String uid) async {
+  Stream<List<JobModel>> getJobsByRecruiter(String uid) {
     try {
-      final document = await _firestore
+      final document = _firestore
           .collection('jobs')
           .where('recruiterId', isEqualTo: uid)
-          .get();
-      final data = document.docs.map((e) => JobModel.fromSnapshot(e)).toList();
+          .snapshots();
+      final data = document.map((e) => e.docs.map((e) {
+            return JobModel.fromSnapshot(e);
+          }).toList());
 
       return data;
     } catch (e) {

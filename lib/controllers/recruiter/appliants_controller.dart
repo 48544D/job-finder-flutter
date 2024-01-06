@@ -12,32 +12,31 @@ class AppliantsController extends GetxController {
   final userRepo = Get.put(UserRepository());
   final jobRepo = Get.put(JobRepository());
 
-  getAppliants(String jobId) async {
+  Stream<List<UserModel>> getAppliants(String jobId) async* {
     try {
-      JobApplicationModel? jobApplication =
-          await jobApplicationsRepo.getJobApplicationByJobId(jobId);
+      Stream<JobApplicationModel> jobApplication =
+          jobApplicationsRepo.getJobApplicationByJobId(jobId);
 
-      List appliantsId = jobApplication?.applicantsId ?? [];
-      if (appliantsId.isEmpty) {
-        return [];
+      await for (JobApplicationModel jobApplication in jobApplication) {
+        List<String> appliantsIds = jobApplication.applicantsId;
+
+        List<UserModel> users = [];
+        for (String userId in appliantsIds) {
+          UserModel user = await userRepo.getUserById(userId).first;
+          users.add(user);
+        }
+
+        yield users;
       }
-
-      List<UserModel> appliants = [];
-      for (var i = 0; i < appliantsId.length; i++) {
-        final appliant = await userRepo.getUserById(appliantsId[i]);
-        appliants.add(appliant);
-      }
-
-      return appliants;
     } catch (e) {
       print('Error getting appliants: $e');
       rethrow;
     }
   }
 
-  Future<JobModel> getJob(String jobId) async {
+  Stream<JobModel> getJob(String jobId) {
     try {
-      final job = await jobRepo.getJobById(jobId);
+      final job = jobRepo.getJobById(jobId);
       return job;
     } catch (e) {
       print('Error getting job: $e');
@@ -54,24 +53,22 @@ class AppliantsController extends GetxController {
     }
   }
 
-  getAcceptedAppliants(String jobId) async {
+  Stream<List<UserModel>> getAcceptedAppliants(String jobId) async* {
     try {
-      JobApplicationModel? jobApplication =
-          await jobApplicationsRepo.getJobApplicationByJobId(jobId);
+      Stream<JobApplicationModel> jobApplication =
+          jobApplicationsRepo.getJobApplicationByJobId(jobId);
 
-      List acceptedApplicantsIds = jobApplication?.acceptedApplicantsIds ?? [];
-      if (acceptedApplicantsIds.isEmpty) {
-        return [];
+      await for (JobApplicationModel jobApplication in jobApplication) {
+        List<String> acceptedIds = jobApplication.acceptedApplicantsIds;
+
+        List<UserModel> users = [];
+        for (String userId in acceptedIds) {
+          UserModel user = await userRepo.getUserById(userId).first;
+          users.add(user);
+        }
+
+        yield users;
       }
-
-      List<UserModel> acceptedAppliants = [];
-      for (var i = 0; i < acceptedApplicantsIds.length; i++) {
-        final acceptedAppliant =
-            await userRepo.getUserById(acceptedApplicantsIds[i]);
-        acceptedAppliants.add(acceptedAppliant);
-      }
-
-      return acceptedAppliants;
     } catch (e) {
       print('Error getting appliants: $e');
       rethrow;

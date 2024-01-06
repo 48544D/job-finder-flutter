@@ -10,18 +10,11 @@ class JobController extends GetxController {
   final authController = Get.put(Authentication());
   final jobsRepo = Get.put(JobRepository());
 
-  late TextEditingController titleController;
-  late TextEditingController descriptionController;
-  late TextEditingController locationController;
-  late TextEditingController salaryController;
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+  final TextEditingController salaryController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  JobController() {
-    titleController = TextEditingController();
-    descriptionController = TextEditingController();
-    locationController = TextEditingController();
-    salaryController = TextEditingController();
-  }
 
   getJobById(String uid) {
     return jobsRepo.getJobById(uid);
