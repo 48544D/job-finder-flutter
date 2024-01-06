@@ -181,10 +181,12 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
       );
     }
 
-    return FutureBuilder(
-        future: controller.getRecruiterData(),
+    return StreamBuilder(
+        stream: controller.getRecruiterData(),
         builder: ((context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const loadingAnimation();
+          } else {
             if (snapshot.hasData) {
               RecruiterModel recruiter = snapshot.data as RecruiterModel;
 
@@ -193,8 +195,6 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
             } else {
               return const HomePage();
             }
-          } else {
-            return const loadingAnimation();
           }
         }));
   }

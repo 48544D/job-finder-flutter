@@ -33,11 +33,12 @@ class RecruiterRepository extends GetxController {
     }
   }
 
-  Future<RecruiterModel> getRecruiter(String uid) async {
+  Stream<RecruiterModel> getRecruiter(String uid) {
     try {
-      final document = await _firestore.collection('recruiters').doc(uid).get();
+      final document = _firestore.collection('recruiters').doc(uid).snapshots();
+      final data = document.map((e) => RecruiterModel.fromSnapshot(e));
 
-      return RecruiterModel.fromSnapshot(document);
+      return data;
     } catch (e) {
       // Handle any errors
       print('Error getting user: $e');
