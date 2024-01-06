@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:job_finder/controllers/home_page_controller.dart';
+import 'package:job_finder/models/jobs.dart';
 import 'package:job_finder/models/recruiter.dart';
 import 'package:job_finder/repo/job_repository.dart';
 import 'package:job_finder/repo/recruiter_repository.dart';
@@ -42,7 +43,7 @@ class ProfileController extends GetxController {
     return recruiterRepo.getRecruiter(uid);
   }
 
-  getRecruiterJobs() {
+  Stream<List<JobModel>> getRecruiterJobs() {
     final uid = authController.currentUser!.uid;
     return jobsRepo.getJobsByRecruiter(uid);
   }

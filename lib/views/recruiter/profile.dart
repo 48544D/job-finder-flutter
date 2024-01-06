@@ -367,10 +367,12 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
           // searchBar(),
           const SizedBox(height: 20),
           // jobs list
-          FutureBuilder(
-              future: profileController.getRecruiterJobs(),
+          StreamBuilder(
+              stream: profileController.getRecruiterJobs(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const loadingAnimation();
+                } else {
                   List jobs = snapshot.data as List;
                   if (jobs.isNotEmpty) {
                     return Column(mainAxisSize: MainAxisSize.max, children: [
@@ -400,8 +402,6 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
                       ),
                     );
                   }
-                } else {
-                  return const loadingAnimation();
                 }
               }),
         ],

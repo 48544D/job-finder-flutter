@@ -42,13 +42,15 @@ class JobRepository extends GetxController {
     }
   }
 
-  Future<List<JobModel>> getJobsByRecruiter(String uid) async {
+  Stream<List<JobModel>> getJobsByRecruiter(String uid) {
     try {
-      final document = await _firestore
+      final document = _firestore
           .collection('jobs')
           .where('recruiterId', isEqualTo: uid)
-          .get();
-      final data = document.docs.map((e) => JobModel.fromSnapshot(e)).toList();
+          .snapshots();
+      final data = document.map((e) => e.docs.map((e) {
+            return JobModel.fromSnapshot(e);
+          }).toList());
 
       return data;
     } catch (e) {
