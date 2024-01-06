@@ -56,4 +56,29 @@ class UserRepository extends GetxController {
       rethrow;
     }
   }
+
+
+
+// Future<List<UserModel>> updateUser(String uid)async{
+//   try{
+//     final document = await _firestore.collection('users').get();
+//     final data = document.docs.map((e) => UserModel.fromSnapshot(e)).toList();
+//     return data;
+//   }catch(e){
+//     print('Error updating user: $e');
+//     rethrow;
+//   }
+// }
+  
+    Future<UserModel> updateUserById(String userId) async {
+      try {
+      final document = await _firestore.collection('users').doc(userId).get();
+
+      return UserModel.fromSnapshot(document);
+    } catch (e) {
+      // Handle any errors
+      print('Error getting user: $e');
+      rethrow;
+    }
+    }
 }

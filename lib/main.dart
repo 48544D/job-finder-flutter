@@ -12,6 +12,10 @@ import 'package:job_finder/views/recruiter/edit_job.dart';
 import 'package:job_finder/views/recruiter/edit_profile.dart';
 import 'package:job_finder/views/recruiter/post_job.dart';
 import 'package:job_finder/views/recruiter/profile.dart';
+import 'package:job_finder/views/user/edit_profil.dart';
+import 'package:job_finder/views/user/home_page_user.dart';
+import 'package:job_finder/views/user/job_List.dart';
+import 'package:job_finder/views/user/profile.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,6 +49,11 @@ class MyApp extends StatelessWidget {
           '/recruiter/post-job': (context) => const PostJobForm(),
           '/recruiter/posts/appliants': (context) => const AppliantsPage(),
           '/recruiter/edit-job': (context) => const EditJobPage(),
+          '/user/profile': (context) => const UserProfilePage(),
+          '/user/edit-profile': (context) => const EditUserProfilePage(),
+          '/user/home_page_user': (context) => HomePageUser(),
+          '/user/job_list': (context) => const JobList(),
+          // '/user/job_card': (context) => const JobCard(),
         });
   }
 }
