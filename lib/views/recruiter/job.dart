@@ -61,6 +61,7 @@ class AppliantsPageState extends State<AppliantsPage> {
         body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
+            // top section
             Container(
               width: MediaQuery.sizeOf(context).width,
               decoration: const BoxDecoration(
@@ -84,22 +85,37 @@ class AppliantsPageState extends State<AppliantsPage> {
                 child: StreamBuilder(
                     stream: appliantsController.getJob(jobId),
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else {
+                      if (snapshot.hasData) {
                         final job = snapshot.data as JobModel;
                         return topSection(job);
                       }
+                      return topSection(JobModel(
+                        id: 'Loading...',
+                        recruiterId: 'Loading...',
+                        title: 'Loading...',
+                        description: 'Loading...',
+                        location: 'Loading...',
+                        salary: 0,
+                        date: DateTime.now(),
+                      ));
                     }),
               ),
             ),
+            const SizedBox(
+              height: 15,
+            ),
+            // body section
             Expanded(
               child: Column(
                 children: [
-                  SizedBox(
-                    height: 60,
+                  // tabs text
+                  Container(
+                    height: 50,
+                    width: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                     child: Center(
                       child: ListView.builder(
                         itemCount: 2,
@@ -109,6 +125,7 @@ class AppliantsPageState extends State<AppliantsPage> {
                         itemBuilder: (ctx, index) {
                           return GestureDetector(
                             onTap: () {
+                              if (selected == index) return;
                               setState(() {
                                 selected = index;
                                 if (index == 0) {
@@ -118,24 +135,22 @@ class AppliantsPageState extends State<AppliantsPage> {
                                 }
                               });
                             },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                width: 100,
-                                decoration: BoxDecoration(
-                                  color: selected == index
-                                      ? Colors.deepPurple
-                                      : Colors.white,
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    tabsNames[index],
-                                    style: TextStyle(
-                                      color: selected == index
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
+                            child: Container(
+                              width: 100,
+                              decoration: BoxDecoration(
+                                color: selected == index
+                                    ? Colors.deepPurple
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  tabsNames[index],
+                                  style: TextStyle(
+                                    color: selected == index
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontSize: 16,
                                   ),
                                 ),
                               ),
@@ -148,7 +163,7 @@ class AppliantsPageState extends State<AppliantsPage> {
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          top: 16.0, left: 16.0, right: 16.0),
+                          top: 10.0, left: 16.0, right: 16.0),
                       child: currentTab,
                     ),
                   ),
