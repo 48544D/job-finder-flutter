@@ -385,7 +385,7 @@ Widget CustomBottomNavigationBar(BuildContext context, List<String> items,
   double displayWidth = MediaQuery.of(context).size.width;
 
   return Container(
-      height: displayWidth * 0.18,
+      height: displayWidth * 0.16,
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -404,99 +404,102 @@ Widget CustomBottomNavigationBar(BuildContext context, List<String> items,
             shrinkWrap: true,
             itemCount: items.length,
             scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) => InkWell(
-                  onTap: () {
-                    if (items[index] == selectedItem) return;
+            itemBuilder: (context, index) => Container(
+                  margin: const EdgeInsets.only(left: 30, right: 30),
+                  child: InkWell(
+                    onTap: () {
+                      if (items[index] == selectedItem) return;
 
-                    if (items[index] == 'Home') {
-                      Get.offNamed('/user/home');
-                    } else if (items[index] == 'Profile') {
-                      Get.offNamed('/user/profile');
-                    }
-                    HapticFeedback.lightImpact();
-                  },
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  child: Stack(
-                    children: [
-                      AnimatedContainer(
-                        duration: const Duration(seconds: 1),
-                        curve: Curves.fastLinearToSlowEaseIn,
-                        width: items[index] == selectedItem
-                            ? displayWidth * 0.32
-                            : displayWidth * 0.18,
-                        alignment: Alignment.center,
-                        child: AnimatedContainer(
+                      if (items[index] == 'Home') {
+                        Get.offNamed('/user/home');
+                      } else if (items[index] == 'Profile') {
+                        Get.offNamed('/user/profile');
+                      }
+                      HapticFeedback.lightImpact();
+                    },
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    child: Stack(
+                      children: [
+                        AnimatedContainer(
                           duration: const Duration(seconds: 1),
                           curve: Curves.fastLinearToSlowEaseIn,
-                          height: items[index] == selectedItem
-                              ? displayWidth * .15
-                              : 0,
                           width: items[index] == selectedItem
-                              ? displayWidth * .32
-                              : 0,
-                          decoration: BoxDecoration(
-                              color: items[index] == selectedItem
-                                  ? Colors.deepPurple.withOpacity(.2)
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(50)),
-                        ),
-                      ),
-                      AnimatedContainer(
-                        duration: const Duration(seconds: 1),
-                        curve: Curves.fastLinearToSlowEaseIn,
-                        width: items[index] == selectedItem
-                            ? displayWidth * .31
-                            : displayWidth * .18,
-                        alignment: Alignment.center,
-                        child: Stack(children: [
-                          Row(
-                            children: [
-                              AnimatedContainer(
-                                duration: const Duration(seconds: 1),
-                                curve: Curves.fastLinearToSlowEaseIn,
-                                width: items[index] == selectedItem
-                                    ? displayWidth * .13
-                                    : 0,
-                              ),
-                              AnimatedOpacity(
-                                opacity: items[index] == selectedItem ? 1 : 0,
-                                duration: const Duration(seconds: 1),
-                                curve: Curves.fastLinearToSlowEaseIn,
-                                child: Text(
-                                  items[index] == selectedItem
-                                      ? items[index]
-                                      : '',
-                                  style: const TextStyle(
-                                    color: Colors.deepPurple,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              AnimatedContainer(
-                                duration: const Duration(seconds: 1),
-                                curve: Curves.fastLinearToSlowEaseIn,
-                                width: items[index] == selectedItem
-                                    ? displayWidth * .03
-                                    : 20,
-                              ),
-                              Icon(
-                                icons[index],
-                                size: displayWidth * .08,
+                              ? displayWidth * 0.32
+                              : displayWidth * 0.18,
+                          alignment: Alignment.center,
+                          child: AnimatedContainer(
+                            duration: const Duration(seconds: 1),
+                            curve: Curves.fastLinearToSlowEaseIn,
+                            height: items[index] == selectedItem
+                                ? displayWidth * .13
+                                : 0,
+                            width: items[index] == selectedItem
+                                ? displayWidth * .32
+                                : 0,
+                            decoration: BoxDecoration(
                                 color: items[index] == selectedItem
-                                    ? Colors.deepPurple
-                                    : Colors.black26,
-                              )
-                            ],
-                          )
-                        ]),
-                      )
-                    ],
+                                    ? Colors.deepPurple.withOpacity(.2)
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(50)),
+                          ),
+                        ),
+                        AnimatedContainer(
+                          duration: const Duration(seconds: 1),
+                          curve: Curves.fastLinearToSlowEaseIn,
+                          width: items[index] == selectedItem
+                              ? displayWidth * .31
+                              : displayWidth * .18,
+                          alignment: Alignment.center,
+                          child: Stack(children: [
+                            Row(
+                              children: [
+                                AnimatedContainer(
+                                  duration: const Duration(seconds: 1),
+                                  curve: Curves.fastLinearToSlowEaseIn,
+                                  width: items[index] == selectedItem
+                                      ? displayWidth * .13
+                                      : 0,
+                                ),
+                                AnimatedOpacity(
+                                  opacity: items[index] == selectedItem ? 1 : 0,
+                                  duration: const Duration(seconds: 1),
+                                  curve: Curves.fastLinearToSlowEaseIn,
+                                  child: Text(
+                                    items[index] == selectedItem
+                                        ? items[index]
+                                        : '',
+                                    style: const TextStyle(
+                                      color: Colors.deepPurple,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                AnimatedContainer(
+                                  duration: const Duration(seconds: 1),
+                                  curve: Curves.fastLinearToSlowEaseIn,
+                                  width: items[index] == selectedItem
+                                      ? displayWidth * .03
+                                      : 20,
+                                ),
+                                Icon(
+                                  icons[index],
+                                  size: displayWidth * .08,
+                                  color: items[index] == selectedItem
+                                      ? Colors.deepPurple
+                                      : Colors.black26,
+                                )
+                              ],
+                            )
+                          ]),
+                        )
+                      ],
+                    ),
                   ),
                 )),
       ));
