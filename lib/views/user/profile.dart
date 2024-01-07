@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:job_finder/controllers/home_page_controller.dart';
 import 'package:job_finder/controllers/user/job_controller.dart';
@@ -45,6 +46,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
           ),
         ),
       ),
+      bottomNavigationBar: CustomBottomNavigationBar(
+          context, ['Home', 'Profile'], [Icons.house, Icons.person], 'Profile'),
     );
   }
 
@@ -375,4 +378,126 @@ class _UserProfilePageState extends State<UserProfilePage> {
       ),
     );
   }
+}
+
+Widget CustomBottomNavigationBar(BuildContext context, List<String> items,
+    List<IconData> icons, String selectedItem) {
+  double displayWidth = MediaQuery.of(context).size.width;
+
+  return Container(
+      height: displayWidth * 0.18,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 3,
+            blurRadius: 30,
+            offset: const Offset(0, 10),
+          )
+        ],
+        borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+      ),
+      child: Center(
+        child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: items.length,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) => InkWell(
+                  onTap: () {
+                    if (items[index] == selectedItem) return;
+
+                    if (items[index] == 'Home') {
+                      Get.offNamed('/user/home');
+                    } else if (items[index] == 'Profile') {
+                      Get.offNamed('/user/profile');
+                    }
+                    HapticFeedback.lightImpact();
+                  },
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  child: Stack(
+                    children: [
+                      AnimatedContainer(
+                        duration: const Duration(seconds: 1),
+                        curve: Curves.fastLinearToSlowEaseIn,
+                        width: items[index] == selectedItem
+                            ? displayWidth * 0.32
+                            : displayWidth * 0.18,
+                        alignment: Alignment.center,
+                        child: AnimatedContainer(
+                          duration: const Duration(seconds: 1),
+                          curve: Curves.fastLinearToSlowEaseIn,
+                          height: items[index] == selectedItem
+                              ? displayWidth * .15
+                              : 0,
+                          width: items[index] == selectedItem
+                              ? displayWidth * .32
+                              : 0,
+                          decoration: BoxDecoration(
+                              color: items[index] == selectedItem
+                                  ? Colors.deepPurple.withOpacity(.2)
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(50)),
+                        ),
+                      ),
+                      AnimatedContainer(
+                        duration: const Duration(seconds: 1),
+                        curve: Curves.fastLinearToSlowEaseIn,
+                        width: items[index] == selectedItem
+                            ? displayWidth * .31
+                            : displayWidth * .18,
+                        alignment: Alignment.center,
+                        child: Stack(children: [
+                          Row(
+                            children: [
+                              AnimatedContainer(
+                                duration: const Duration(seconds: 1),
+                                curve: Curves.fastLinearToSlowEaseIn,
+                                width: items[index] == selectedItem
+                                    ? displayWidth * .13
+                                    : 0,
+                              ),
+                              AnimatedOpacity(
+                                opacity: items[index] == selectedItem ? 1 : 0,
+                                duration: const Duration(seconds: 1),
+                                curve: Curves.fastLinearToSlowEaseIn,
+                                child: Text(
+                                  items[index] == selectedItem
+                                      ? items[index]
+                                      : '',
+                                  style: const TextStyle(
+                                    color: Colors.deepPurple,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              AnimatedContainer(
+                                duration: const Duration(seconds: 1),
+                                curve: Curves.fastLinearToSlowEaseIn,
+                                width: items[index] == selectedItem
+                                    ? displayWidth * .03
+                                    : 20,
+                              ),
+                              Icon(
+                                icons[index],
+                                size: displayWidth * .08,
+                                color: items[index] == selectedItem
+                                    ? Colors.deepPurple
+                                    : Colors.black26,
+                              )
+                            ],
+                          )
+                        ]),
+                      )
+                    ],
+                  ),
+                )),
+      ));
 }

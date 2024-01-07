@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:job_finder/views/user/profile.dart';
 
-class HomePageUser extends StatelessWidget {
+class HomePageUser extends StatefulWidget {
+  const HomePageUser({super.key});
+
+  @override
+  State<HomePageUser> createState() => _HomePageUserState();
+}
+
+class _HomePageUserState extends State<HomePageUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,6 +67,8 @@ class HomePageUser extends StatelessWidget {
         },
         child: Icon(Icons.person),
       ),
+      bottomNavigationBar: CustomBottomNavigationBar(
+          context, ['Home', 'Profile'], [Icons.house, Icons.person], 'Home'),
     );
   }
 }
