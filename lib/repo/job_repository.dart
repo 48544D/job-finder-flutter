@@ -59,11 +59,14 @@ class JobRepository extends GetxController {
       rethrow;
     }
   }
-
-  Future<List<JobModel>> getAllJobs(String uid) async {
+  Stream<List<JobModel>> getAllJobs() {
     try {
-      final document = await _firestore.collection('jobs').get();
-      final data = document.docs.map((e) => JobModel.fromSnapshot(e)).toList();
+      final document = _firestore
+          .collection('jobs')
+          .snapshots();
+      final data = document.map((e) => e.docs.map((e) {
+            return JobModel.fromSnapshot(e);
+          }).toList());
 
       return data;
     } catch (e) {
@@ -72,6 +75,14 @@ class JobRepository extends GetxController {
       rethrow;
     }
   }
+
+  // Future<List<JobModel>> getAllJobs() async {
+  //   try {
+  //     final document = await _firestore.collection('jobs').get();
+  //     final data = document.docs.map((e) => JobModel.fromSnapshot(e)).toList();
+
+  //     return data;
+  // }
 
   void deleteJob(String jobId) {
     try {

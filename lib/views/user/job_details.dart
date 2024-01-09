@@ -1,6 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:job_finder/controllers/recruiter/job_controller.dart';
+import 'package:job_finder/controllers/user/job_controller.dart';
 import 'package:job_finder/models/jobs.dart';
 
 class JobDetails extends StatefulWidget {
@@ -13,7 +15,7 @@ class JobDetails extends StatefulWidget {
 class _JobDetailsState extends State<JobDetails> {
   final jobId = Get.arguments['jobId'];
   final showApplyButton = Get.arguments['showApplyButton'];
-  final jobController = Get.put(JobController());
+  final jobController = Get.put(UserJobController());
 
   @override
   Widget build(BuildContext context) {
@@ -146,6 +148,7 @@ class _JobDetailsState extends State<JobDetails> {
                             width: 300,
                             child: ElevatedButton(
                               onPressed: () {
+                                Get.toNamed('/user/home');
                                 jobController.applyToJob(jobId);
                               },
                               style: ElevatedButton.styleFrom(

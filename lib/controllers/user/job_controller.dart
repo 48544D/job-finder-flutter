@@ -2,6 +2,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:job_finder/models/job_applications.dart';
+import 'package:job_finder/models/jobs.dart';
 import 'package:job_finder/repo/job_applications_repository.dart';
 import 'package:job_finder/repo/job_repository.dart';
 import 'package:job_finder/utils/authentication.dart';
@@ -15,6 +16,10 @@ class UserJobController extends GetxController {
 
 getJobById(String uid) {
     return jobsRepo.getJobById(uid);
+  }
+  
+Stream<List<JobModel>> getAllJobs() {
+    return jobsRepo.getAllJobs();
   }
 
   void applyToJob(String jobId) async {
@@ -41,15 +46,15 @@ getJobById(String uid) {
         id: '',
         applicantsId: [uid],
         jobId: jobId, acceptedApplicantsIds: [],  
-      );
+      );  
       await jobApplicationsRepo.applyToJob(jobApplication);
 
-      // navigate to user profile page
+      // navigate to user home page
       Get.snackbar('Success', 'Job application submitted successfully',
           backgroundColor: Colors.green,
           colorText: Colors.white,
           snackPosition: SnackPosition.TOP);
-      Get.offNamed('/user/profile');
+      Get.offNamed('/user/home');
     } catch (e) {
       Get.snackbar('Error', e.toString(),
           backgroundColor: Colors.red,

@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
           '/register': (context) => const AccountTypeRegister(),
           '/register/recruiter': (context) => const RecruiterRegisterPage(),
           '/register/employee': (context) => const EmployeeRegisterPage(),
+          // recruiter
           '/recruiter/profile': (context) => const RecruiterProfilePage(),
           '/recruiter/edit-profile': (context) => const EditProfilePage(),
           '/recruiter/post-job': (context) => const PostJobForm(),
@@ -52,7 +53,6 @@ class MyApp extends StatelessWidget {
           // user
           '/user/profile': (context) => const UserProfilePage(),
           '/user/edit-profile': (context) => const EditUserProfilePage(),
-          '/user/home_page_user': (context) => HomePageUser(),
           '/user/job_details': (context) => const JobDetails(),
           '/user/home': (context) => const HomePageUser(),
         });
