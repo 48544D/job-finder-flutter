@@ -66,14 +66,14 @@ class _JobDetailsState extends State<JobDetails> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    // const SizedBox(height: 10),
                     SizedBox(
                       width: double.infinity,
                       child: Text(
                         "${job.salary.toInt()} DH",
                         style: TextStyle(
                             color: Colors.black.withOpacity(0.8),
-                            fontSize: 20,
+                            fontSize: 15,
                             fontWeight: FontWeight.w400),
                       ),
                     ),
@@ -83,7 +83,7 @@ class _JobDetailsState extends State<JobDetails> {
                         job.location,
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.8),
-                          fontSize: 20,
+                          fontSize: 15,
                         ),
                       ),
                     ),

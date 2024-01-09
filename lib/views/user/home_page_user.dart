@@ -133,7 +133,7 @@ class _HomePageUserState extends State<HomePageUser> {
                       maxLines: 2,
                       style: const TextStyle(
                         color: Colors.black,
-                        fontSize: 21,
+                        fontSize: 22,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -145,7 +145,7 @@ class _HomePageUserState extends State<HomePageUser> {
                 job.location,
                 style: TextStyle(
                   color: Colors.black.withOpacity(0.8),
-                  fontSize: 20,
+                  fontSize: 15,
                 ),
               ),
               Text(
