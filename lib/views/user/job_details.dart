@@ -39,6 +39,7 @@ class _JobDetailsState extends State<JobDetails> {
                 return const Center(child: CircularProgressIndicator());
               } else {
                 final job = snapshot.data as JobModel;
+                final isUserApplied = jobController.isUserAppliedToJob(jobId);
 
                 return Column(
                   children: [
@@ -146,11 +147,24 @@ class _JobDetailsState extends State<JobDetails> {
                             width: 300,
                             child: ElevatedButton(
                               onPressed: () {
-                                Get.toNamed('/user/home');
-                                jobController.applyToJob(jobId);
+                                isUserApplied.listen((event) {
+                                  if (event == true) {
+                                    Get.snackbar('Error',
+                                        'You already applied to this job',
+                                        backgroundColor: Colors.red,
+                                        colorText: Colors.white,
+                                        snackPosition: SnackPosition.TOP);
+                                    return;
+                                  } else {
+                                    Get.toNamed('/user/home');
+                                    jobController.applyToJob(jobId);
+                                  }
+                                });
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.deepPurple,
+                                backgroundColor: isUserApplied == false
+                                    ? Colors.deepPurple
+                                    : Colors.deepPurple.withOpacity(0.5),
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 32,
                                   vertical: 12,

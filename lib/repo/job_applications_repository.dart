@@ -11,11 +11,28 @@ class JobApplicationsRepository extends GetxController {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> applyToJob(JobApplicationModel jobApplication) async {
+  Future<void> applyToJob(String userId, String jobId) async {
     try {
-      await _firestore
+      final document = await _firestore
           .collection('jobApplications')
-          .add(jobApplication.toJson());
+          .where('jobId', isEqualTo: jobId)
+          .get();
+
+      if (document.docs.isNotEmpty) {
+        final data = document.docs.single.data();
+        final applicantsId = data['applicantsId'];
+        applicantsId.add(userId);
+        await _firestore
+            .collection('jobApplications')
+            .doc(document.docs.single.id)
+            .update({'applicantsId': applicantsId});
+      } else {
+        await _firestore.collection('jobApplications').add({
+          'jobId': jobId,
+          'applicantsId': [userId],
+          'acceptedApplicantsIds': []
+        });
+      }
     } catch (e) {
       // Handle any errors
       print('Error creating Job: $e');
