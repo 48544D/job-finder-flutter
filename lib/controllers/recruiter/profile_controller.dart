@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:job_finder/controllers/home_page_controller.dart';
 import 'package:job_finder/models/jobs.dart';
 import 'package:job_finder/models/recruiter.dart';
 import 'package:job_finder/repo/job_repository.dart';
@@ -34,7 +33,6 @@ class ProfileController extends GetxController {
 
   void logout() {
     Authentication().signOut();
-    const HomePage();
   }
 
   void updateProfile() async {

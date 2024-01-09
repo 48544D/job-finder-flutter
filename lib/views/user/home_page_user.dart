@@ -74,6 +74,7 @@ class _HomePageUserState extends State<HomePageUser> {
           color: Colors.white,
           onPressed: () {
             userProfilecontroller.logout();
+            Navigator.popAndPushNamed(context, '/login');
           },
         )
       ],
@@ -260,7 +261,7 @@ Widget CustomBottomNavigationBar(BuildContext context, List<String> items,
                       if (items[index] == selectedItem) return;
 
                       if (items[index] == 'Home') {
-                        Get.offNamed('/user/home');
+                        Get.off('/user/home');
                       } else if (items[index] == 'Profile') {
                         Get.offNamed('/user/profile');
                       }

@@ -70,6 +70,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
           color: Colors.white,
           onPressed: () {
             userProfilecontroller.logout();
+            Navigator.popAndPushNamed(context, '/login');
           },
         )
       ],
