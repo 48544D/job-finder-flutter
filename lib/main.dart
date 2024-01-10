@@ -16,6 +16,7 @@ import 'package:job_finder/views/user/edit_profil.dart';
 import 'package:job_finder/views/user/home_page_user.dart';
 import 'package:job_finder/views/user/job_details.dart';
 import 'package:job_finder/views/user/profile.dart';
+import 'package:job_finder/views/user/search.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,6 +56,6 @@ class MyApp extends StatelessWidget {
           '/user/edit-profile': (context) => const EditUserProfilePage(),
           '/user/job_details': (context) => const JobDetails(),
           '/user/home': (context) => const HomePageUser(),
-        });
+          });
   }
 }

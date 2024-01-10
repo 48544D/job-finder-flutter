@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -8,6 +11,9 @@ import 'package:job_finder/models/jobs.dart';
 import 'package:job_finder/utils/background.dart';
 import 'package:job_finder/utils/scroll_view_height.dart';
 import 'package:job_finder/views/user/profile.dart';
+import 'package:job_finder/views/user/search.dart';
+
+
 
 class HomePageUser extends StatefulWidget {
   const HomePageUser({super.key});
@@ -17,6 +23,7 @@ class HomePageUser extends StatefulWidget {
 }
 
 class _HomePageUserState extends State<HomePageUser> {
+  
   @override
   Widget build(BuildContext context) {
     return Background(child: _body(context));
@@ -39,6 +46,7 @@ class _HomePageUserState extends State<HomePageUser> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 _appbar(),
+                _SearchBar(),
                 _jobList(jobController),
               ],
             ),
@@ -78,6 +86,21 @@ class _HomePageUserState extends State<HomePageUser> {
           },
         )
       ],
+      
+    );
+    
+  }
+
+  Widget _SearchBar(){
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: () {
+                showSearch(context: context, delegate: SearchPage());
+              },
+              child: Icon(Icons.search),
+            ),
+
     );
   }
 
@@ -163,15 +186,6 @@ class _HomePageUserState extends State<HomePageUser> {
                 fontSize: 12,
                 ),
               ),
-              // Text(
-              //   job.description,
-              //   overflow: TextOverflow.ellipsis,
-              //   maxLines: 3,
-              //   style: TextStyle(
-              //     color: Colors.black.withOpacity(0.8),
-              //     fontSize: 15,
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -296,9 +310,6 @@ Widget CustomBottomNavigationBar(BuildContext context, List<String> items,
                       } else if (items[index] == 'Profile') {
                         Get.offNamed('/user/profile');
                       }
-                      // else if (items[index] == 'Search'){
-                      //   Get.offNamed('/user/search');
-                      // }
                       HapticFeedback.lightImpact();
                     },
                     splashColor: Colors.transparent,
@@ -388,4 +399,3 @@ Widget CustomBottomNavigationBar(BuildContext context, List<String> items,
                 )),
       ));
 }
-
