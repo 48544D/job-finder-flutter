@@ -1,7 +1,6 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:job_finder/models/job_applications.dart';
 import 'package:job_finder/models/jobs.dart';
 import 'package:job_finder/repo/job_applications_repository.dart';
 import 'package:job_finder/repo/job_repository.dart';
@@ -14,12 +13,20 @@ class UserJobController extends GetxController {
   final jobsRepo = Get.put(JobRepository());
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-getJobById(String uid) {
+  getJobById(String uid) {
     return jobsRepo.getJobById(uid);
   }
-  
-Stream<List<JobModel>> getAllJobs() {
+
+  Stream<List<JobModel>> getAllJobs() {
     return jobsRepo.getAllJobs();
+  }
+
+  Stream<bool> isUserAppliedToJob(String jobId) {
+    final userId = authController.currentUser!.uid;
+    return jobApplicationsRepo.getJobApplicationByJobId(jobId).map((event) {
+      return event.applicantsId.contains(userId) ||
+          event.acceptedApplicantsIds.contains(userId);
+    });
   }
 
   void applyToJob(String jobId) async {
@@ -35,19 +42,9 @@ Stream<List<JobModel>> getAllJobs() {
         return;
       }
 
-      // form validation
-      if (!formKey.currentState!.validate()) {
-        return;
-      }
-
       // save job application data to firestore
-      final uid = authController.currentUser!.uid;
-      final jobApplication = JobApplicationModel(
-        id: '',
-        applicantsId: [uid],
-        jobId: jobId, acceptedApplicantsIds: [],  
-      );  
-      await jobApplicationsRepo.applyToJob(jobApplication);
+      final userId = authController.currentUser!.uid;
+      await jobApplicationsRepo.applyToJob(userId, jobId);
 
       // navigate to user home page
       Get.snackbar('Success', 'Job application submitted successfully',
@@ -60,8 +57,7 @@ Stream<List<JobModel>> getAllJobs() {
           backgroundColor: Colors.red,
           colorText: Colors.white,
           snackPosition: SnackPosition.TOP);
+      throw e;
     }
   }
-
-
 }

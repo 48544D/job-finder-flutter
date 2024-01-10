@@ -10,10 +10,13 @@ import 'package:job_finder/controllers/user/profile_controller.dart';
 import 'package:job_finder/models/jobs.dart';
 import 'package:job_finder/utils/background.dart';
 import 'package:job_finder/utils/scroll_view_height.dart';
+<<<<<<< HEAD
 import 'package:job_finder/views/user/profile.dart';
 import 'package:job_finder/views/user/search.dart';
 
 
+=======
+>>>>>>> 210a345ef967bbb74be815645afede890fe6fe9f
 
 class HomePageUser extends StatefulWidget {
   const HomePageUser({super.key});
@@ -83,6 +86,7 @@ class _HomePageUserState extends State<HomePageUser> {
           color: Colors.white,
           onPressed: () {
             userProfilecontroller.logout();
+            Navigator.popAndPushNamed(context, '/login');
           },
         )
       ],
@@ -113,7 +117,6 @@ class _HomePageUserState extends State<HomePageUser> {
         child: Text('JOBS',
             textAlign: TextAlign.left,
             style: TextStyle(
-              color: Colors.deepPurple,
               fontSize: 27,
               fontWeight: FontWeight.w500,
             )),
@@ -134,11 +137,11 @@ class _HomePageUserState extends State<HomePageUser> {
               BoxShadow(
                 color: Colors.black.withOpacity(0.08),
                 spreadRadius: 1,
-                blurRadius: 2,
+                blurRadius: 1,
                 offset: const Offset(0, 1),
               )
             ],
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(10),
             color: Colors.white,
           ),
           padding: const EdgeInsets.all(15),
@@ -154,10 +157,10 @@ class _HomePageUserState extends State<HomePageUser> {
                     child: Text(
                       job.title,
                       overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
+                      maxLines: 2,
                       style: const TextStyle(
                         color: Colors.black,
-                        fontSize: 20,
+                        fontSize: 22,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -179,11 +182,14 @@ class _HomePageUserState extends State<HomePageUser> {
                   fontSize: 15,
                 ),
               ),
+              const SizedBox(
+                height: 5,
+              ),
               Text(
                 'Posted at: ${job.date.toString().substring(0, 10)}',
                 style: const TextStyle(
-                color: Colors.black,
-                fontSize: 12,
+                  color: Colors.black,
+                  fontSize: 12,
                 ),
               ),
             ],
@@ -191,43 +197,48 @@ class _HomePageUserState extends State<HomePageUser> {
         ),
       );
     }
-    
-    return Container(
-      constraints: BoxConstraints(
-        minHeight: innerHeight,
-      ),
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-        horizontal: 17,
-        vertical: 10,
-      ),
-      decoration: BoxDecoration(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
-          ),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              spreadRadius: 3,
-              blurRadius: 7,
-              offset: const Offset(0, -2),
-            )
-          ]),
-      child: Column(
-        children: [
-          bottomCardHeader(),
-          const SizedBox(height: 10),
-          // jobs list
-          StreamBuilder(
-              stream: userjobController.getAllJobs(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const loadingAnimation();
+
+    return Column(
+      children: [
+        const SizedBox(height: 20),
+        bottomCardHeader(),
+        const SizedBox(height: 15),
+        // jobs list
+        StreamBuilder(
+            stream: userjobController.getAllJobs(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const loadingAnimation();
+              } else {
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: Text(
+                      'No jobs yet',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  );
+                }
+                List jobs = snapshot.data as List;
+                if (jobs.isNotEmpty) {
+                  return Column(mainAxisSize: MainAxisSize.max, children: [
+                    for (var job in jobs)
+                      Column(
+                        children: [
+                          jobCard(job),
+                          const SizedBox(height: 10),
+                        ],
+                      ),
+                  ]);
                 } else {
-                  if (!snapshot.hasData) {
-                    return const Center(
+                  return Container(
+                    constraints: BoxConstraints(
+                      minHeight: innerHeight * 0.4,
+                    ),
+                    child: const Center(
                       child: Text(
                         'No jobs yet',
                         style: TextStyle(
@@ -236,41 +247,12 @@ class _HomePageUserState extends State<HomePageUser> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                    );
-                  }
-                  List jobs = snapshot.data as List;
-                  if (jobs.isNotEmpty) {
-                    return Column(
-                      mainAxisSize: MainAxisSize.max, children: [
-                      for (var job in jobs)
-                        Column(
-                          children: [
-                            jobCard(job),
-                            const SizedBox(height: 10),
-                          ],
-                        ),
-                    ]);
-                  } else {
-                    return Container(
-                      constraints: BoxConstraints(
-                        minHeight: innerHeight * 0.4,
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'No jobs yet',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    );
-                  }
+                    ),
+                  );
                 }
-              }),
-        ],
-      ),
+              }
+            }),
+      ],
     );
   }
 }
@@ -306,7 +288,7 @@ Widget CustomBottomNavigationBar(BuildContext context, List<String> items,
                       if (items[index] == selectedItem) return;
 
                       if (items[index] == 'Home') {
-                        Get.offNamed('/user/home');
+                        Get.off('/user/home');
                       } else if (items[index] == 'Profile') {
                         Get.offNamed('/user/profile');
                       }
@@ -398,4 +380,8 @@ Widget CustomBottomNavigationBar(BuildContext context, List<String> items,
                   ),
                 )),
       ));
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 210a345ef967bbb74be815645afede890fe6fe9f

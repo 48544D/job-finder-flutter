@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,18 +23,6 @@ class UserProfileController extends GetxController {
   final formKey = GlobalKey<FormState>();
   late UserModel user;
 
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  //   getUserData().then((value) {
-  //     firstNameController.text = value.firstName;
-  //     lastNameController.text = value.lastName;
-  //     emailController.text = value.email;
-  //     //File cv=value.cv;
-
-  //   });
-  // }
-
   Stream<UserModel> getUserData() {
     final uid = authController.currentUser!.uid;
     return userRepo.getUserById(uid);
@@ -49,9 +35,7 @@ class UserProfileController extends GetxController {
 
     await for (List<String> jobIds in userJobIds) {
       List<JobModel> jobs = [];
-      log('jobIds: $jobIds');
       for (String jobId in jobIds) {
-        log('jobId: $jobId');
         JobModel job = await jobsRepo.getJobById(jobId).first;
         jobs.add(job);
       }

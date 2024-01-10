@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:job_finder/controllers/user/job_controller.dart';
@@ -41,6 +39,7 @@ class _JobDetailsState extends State<JobDetails> {
                 return const Center(child: CircularProgressIndicator());
               } else {
                 final job = snapshot.data as JobModel;
+                final isUserApplied = jobController.isUserAppliedToJob(jobId);
 
                 return Column(
                   children: [
@@ -67,14 +66,14 @@ class _JobDetailsState extends State<JobDetails> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    // const SizedBox(height: 10),
                     SizedBox(
                       width: double.infinity,
                       child: Text(
                         "${job.salary.toInt()} DH",
                         style: TextStyle(
                             color: Colors.black.withOpacity(0.8),
-                            fontSize: 20,
+                            fontSize: 15,
                             fontWeight: FontWeight.w400),
                       ),
                     ),
@@ -84,7 +83,7 @@ class _JobDetailsState extends State<JobDetails> {
                         job.location,
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.8),
-                          fontSize: 20,
+                          fontSize: 15,
                         ),
                       ),
                     ),
@@ -148,11 +147,24 @@ class _JobDetailsState extends State<JobDetails> {
                             width: 300,
                             child: ElevatedButton(
                               onPressed: () {
-                                Get.toNamed('/user/home');
-                                jobController.applyToJob(jobId);
+                                isUserApplied.listen((event) {
+                                  if (event == true) {
+                                    Get.snackbar('Error',
+                                        'You already applied to this job',
+                                        backgroundColor: Colors.red,
+                                        colorText: Colors.white,
+                                        snackPosition: SnackPosition.TOP);
+                                    return;
+                                  } else {
+                                    Get.toNamed('/user/home');
+                                    jobController.applyToJob(jobId);
+                                  }
+                                });
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.deepPurple,
+                                backgroundColor: isUserApplied == false
+                                    ? Colors.deepPurple
+                                    : Colors.deepPurple.withOpacity(0.5),
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 32,
                                   vertical: 12,

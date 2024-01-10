@@ -40,7 +40,7 @@ class LoginController extends GetxController {
       passwordController.clear();
 
       // navigate to home page
-      const HomePage();
+      Get.off(const HomePage());
     } catch (e) {
       if (e is FirebaseAuthException) {
         Get.snackbar('Error', e.message!,
