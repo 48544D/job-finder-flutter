@@ -10,13 +10,10 @@ import 'package:job_finder/controllers/user/profile_controller.dart';
 import 'package:job_finder/models/jobs.dart';
 import 'package:job_finder/utils/background.dart';
 import 'package:job_finder/utils/scroll_view_height.dart';
-<<<<<<< HEAD
 import 'package:job_finder/views/user/profile.dart';
 import 'package:job_finder/views/user/search.dart';
 
 
-=======
->>>>>>> 210a345ef967bbb74be815645afede890fe6fe9f
 
 class HomePageUser extends StatefulWidget {
   const HomePageUser({super.key});
@@ -380,8 +377,4 @@ Widget CustomBottomNavigationBar(BuildContext context, List<String> items,
                   ),
                 )),
       ));
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 210a345ef967bbb74be815645afede890fe6fe9f

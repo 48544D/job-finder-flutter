@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:job_finder/controllers/home_page_controller.dart';
 import 'package:job_finder/firebase_options.dart';
+import 'package:job_finder/utils/terms_and_conditions.dart';
+import 'package:job_finder/views/Hello.dart';
+import 'package:job_finder/views/TermsAndConditionsButton%20.dart';
 import 'package:job_finder/views/auth/account_type.dart';
 import 'package:job_finder/views/auth/login.dart';
 import 'package:job_finder/views/auth/register_employee.dart';
@@ -39,7 +42,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const HomePage(),
+        home: const Hello(),
         routes: {
           '/login': (context) => const LoginPage(),
           '/register': (context) => const AccountTypeRegister(),
@@ -56,6 +59,7 @@ class MyApp extends StatelessWidget {
           '/user/edit-profile': (context) => const EditUserProfilePage(),
           '/user/job_details': (context) => const JobDetails(),
           '/user/home': (context) => const HomePageUser(),
+          '/TermsAndConditionsButton':(context) => TermsAndConditionsButton(),   
           });
   }
 }
