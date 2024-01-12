@@ -208,7 +208,11 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                               : Icons.visibility_off),
                         )),
                   ),
-
+                  const SizedBox(height: 20),
+                  FloatingActionButton(
+                  child: Icon(Icons.upload_file),
+                  onPressed: profileController.pickCV,
+                  ),
                   const SizedBox(height: 20),
                   Center(
                     child: OutlinedButton(

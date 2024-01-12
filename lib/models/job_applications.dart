@@ -5,6 +5,7 @@ class JobApplicationModel {
   final List<String> applicantsId;
   final List<String> acceptedApplicantsIds;
   final String jobId;
+  
 
   JobApplicationModel({
     required this.id,

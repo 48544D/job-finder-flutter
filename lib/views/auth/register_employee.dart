@@ -6,7 +6,9 @@ import 'package:job_finder/utils/background.dart';
 import 'package:job_finder/utils/scroll_view_height.dart';
 
 class EmployeeRegisterPage extends StatefulWidget {
+  
   const EmployeeRegisterPage({super.key});
+  
 
   @override
   State<EmployeeRegisterPage> createState() => _EmployeeRegisterPageState();
@@ -77,7 +79,7 @@ class _EmployeeRegisterPageState extends State<EmployeeRegisterPage> {
       key: controller.formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        children: <Widget>[
           Text(
             'Register',
             style: TextStyle(

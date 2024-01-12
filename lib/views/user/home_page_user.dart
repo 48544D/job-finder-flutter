@@ -83,7 +83,8 @@ class _HomePageUserState extends State<HomePageUser> {
           color: Colors.white,
           onPressed: () {
             userProfilecontroller.logout();
-            Navigator.popAndPushNamed(context, '/login');
+            Get.to('/login');
+            // Navigator.popAndPushNamed(context, '/login');
           },
         )
       ],

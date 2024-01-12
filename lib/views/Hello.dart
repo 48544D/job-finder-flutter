@@ -1,8 +1,5 @@
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:job_finder/utils/lets_start.dart';
 import 'package:job_finder/utils/logo.dart';
-import 'package:job_finder/utils/terms_and_conditions.dart';
 import 'package:job_finder/views/TermsAndConditionsButton%20.dart';
 import 'package:job_finder/views/auth/login.dart';
 import 'package:flutter/cupertino.dart';
