@@ -1,9 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:job_finder/controllers/home_page_controller.dart';
 import 'package:job_finder/firebase_options.dart';
-import 'package:job_finder/utils/terms_and_conditions.dart';
 import 'package:job_finder/views/Hello.dart';
 import 'package:job_finder/views/TermsAndConditionsButton%20.dart';
 import 'package:job_finder/views/auth/account_type.dart';
@@ -19,7 +17,6 @@ import 'package:job_finder/views/user/edit_profil.dart';
 import 'package:job_finder/views/user/home_page_user.dart';
 import 'package:job_finder/views/user/job_details.dart';
 import 'package:job_finder/views/user/profile.dart';
-import 'package:job_finder/views/user/search.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

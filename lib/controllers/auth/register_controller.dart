@@ -10,6 +10,7 @@ import 'package:job_finder/utils/authentication.dart';
 
 class RegisterController extends GetxController {
   static RegisterController get instance => Get.find();
+  final authController = Get.put(Authentication());
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -78,7 +79,6 @@ class RegisterController extends GetxController {
       }
     }
   }
-
   Future<void> registerRecruiter() async {
     try {
       // check internet connection

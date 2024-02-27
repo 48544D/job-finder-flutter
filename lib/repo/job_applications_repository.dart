@@ -30,7 +30,7 @@ class JobApplicationsRepository extends GetxController {
         await _firestore.collection('jobApplications').add({
           'jobId': jobId,
           'applicantsId': [userId],
-          'acceptedApplicantsIds': []
+          'acceptedApplicantsIds': [],
         });
       }
     } catch (e) {
