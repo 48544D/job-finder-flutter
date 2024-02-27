@@ -53,8 +53,7 @@ class JobApplicationsRepository extends GetxController {
       return data;
     } catch (e) {
       // Handle any errors
-      print('Error getting Job: $e');
-      rethrow;
+      throw e;
     }
   }
 

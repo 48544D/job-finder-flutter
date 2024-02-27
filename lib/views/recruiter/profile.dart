@@ -70,6 +70,7 @@ class RecruiterProfilePageState extends State<RecruiterProfilePage> {
           color: Colors.white,
           onPressed: () {
             controller.logout();
+            const HomePage();
           },
         )
       ],

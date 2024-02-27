@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,7 +25,11 @@ class UserJobController extends GetxController {
 
   Stream<bool> isUserAppliedToJob(String jobId) {
     final userId = authController.currentUser!.uid;
+    if (jobApplicationsRepo.getJobApplicationByJobId(jobId) == null) {
+      return Stream.value(false);
+    }
     return jobApplicationsRepo.getJobApplicationByJobId(jobId).map((event) {
+      log('event.applicantsId.contains(userId) ${event.applicantsId.contains(userId)}');
       return event.applicantsId.contains(userId) ||
           event.acceptedApplicantsIds.contains(userId);
     });
