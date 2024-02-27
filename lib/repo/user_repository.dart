@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:job_finder/models/user.dart';
@@ -50,37 +48,35 @@ class UserRepository extends GetxController {
   // }
 
   Stream<UserModel> getUserById(String userId) {
-  try {
-    final document = _firestore.collection('users').doc(userId).snapshots();
-    final data = document.map((snapshot) {
-      final user = UserModel.fromSnapshot(snapshot);
-      return user;
-    });
+    try {
+      final document = _firestore.collection('users').doc(userId).snapshots();
+      final data = document.map((snapshot) {
+        final user = UserModel.fromSnapshot(snapshot);
+        return user;
+      });
 
-    return data;
-  } catch (e) {
-    // Handle any errors
-    print('Error getting user: $e');
-    rethrow;
+      return data;
+    } catch (e) {
+      // Handle any errors
+      print('Error getting user: $e');
+      rethrow;
+    }
   }
-}
 
-Stream getUserCv(String userId){
-  try {
-    final document = _firestore.collection('CVs').doc(userId).snapshots();
-    final data = document.map((snapshot) {
-      return snapshot;   
-   });
+  Stream getUserCv(String userId) {
+    try {
+      final document = _firestore.collection('CVs').doc(userId).snapshots();
+      final data = document.map((snapshot) {
+        return snapshot;
+      });
 
-    return data;
-  } catch (e) {
-    // Handle any errors
-    print('Error getting user: $e');
-    rethrow;
+      return data;
+    } catch (e) {
+      // Handle any errors
+      print('Error getting user: $e');
+      rethrow;
+    }
   }
-}
-  
-
 
   Future<List<UserModel>> getAllUsers(String uid) async {
     try {

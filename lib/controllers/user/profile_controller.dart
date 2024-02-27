@@ -37,65 +37,62 @@ class UserProfileController extends GetxController {
   //   final uid = authController.currentUser!.uid;
   //   return userRepo.getUserCv(uid);
   // }
-  
-  String url ="";
-  pickCV() async{
-    try {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    );
-    if (result != null) {
-    File pick = File(result!.files.single.path.toString());
-    String fileName = result.files[0].name;
-    final uid = authController.currentUser!.uid;
-    var file = pick.readAsBytesSync();
-    // Check if the user already has a CV
-      var userCvSnapshot = await FirebaseFirestore.instance
-          .collection("CVs")
-          .where("id", isEqualTo: uid)
-          .get();
 
-      if (userCvSnapshot.docs.isNotEmpty) {
-        // If the user has a CV, delete the old CV
-        await FirebaseStorage.instance
-            .refFromURL(userCvSnapshot.docs.first['url'])
-            .delete();
-        await userCvSnapshot.docs.first.reference.delete();
+  String url = "";
+  pickCV() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+      );
+      if (result != null) {
+        File pick = File(result!.files.single.path.toString());
+        String fileName = result.files[0].name;
+        final uid = authController.currentUser!.uid;
+        var file = pick.readAsBytesSync();
+        // Check if the user already has a CV
+        var userCvSnapshot = await FirebaseFirestore.instance
+            .collection("CVs")
+            .where("id", isEqualTo: uid)
+            .get();
+
+        if (userCvSnapshot.docs.isNotEmpty) {
+          // If the user has a CV, delete the old CV
+          await FirebaseStorage.instance
+              .refFromURL(userCvSnapshot.docs.first['url'])
+              .delete();
+          await userCvSnapshot.docs.first.reference.delete();
+        }
+        // Upload the new CV
+        var pdfFile = FirebaseStorage.instance.ref().child("CVs/$fileName");
+        UploadTask task = pdfFile.putData(file);
+        TaskSnapshot snapshot = await task.whenComplete(() {});
+        url = await snapshot.ref.getDownloadURL();
+        if (url != null) {
+          await FirebaseFirestore.instance.collection("CVs").doc().set({
+            "id": uid,
+            "name": fileName,
+            "url": url,
+          });
+          Get.snackbar('Success', 'CV upload successfully',
+              backgroundColor: Colors.green,
+              colorText: Colors.white,
+              snackPosition: SnackPosition.TOP);
+        } else {
+          Get.snackbar('Error', 'CV upload failed',
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+              snackPosition: SnackPosition.TOP);
+        }
       }
-      // Upload the new CV
-    var pdfFile = FirebaseStorage.instance.ref().child("CVs/$fileName");
-    UploadTask task = pdfFile.putData(file);
-    TaskSnapshot snapshot = await task.whenComplete(() {});
-    url = await snapshot.ref.getDownloadURL();
-    if (url != null) {
-    await FirebaseFirestore.instance
-    .collection("CVs")
-    .doc()
-    .set({
-          "id": uid,
-          "name": fileName,
-          "url": url,
-        });
-        Get.snackbar('Success', 'CV upload successfully',
-            backgroundColor: Colors.green,
-            colorText: Colors.white,
-            snackPosition: SnackPosition.TOP);
-      } else {
-        Get.snackbar('Error', 'CV upload failed',
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            snackPosition: SnackPosition.TOP);
-      }
+    } catch (e) {
+      // Handle any errors during file picking
+      print("Error picking file: $e");
+      Get.snackbar('Error', 'File picking failed',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP);
     }
-  } catch (e) {
-    // Handle any errors during file picking
-    print("Error picking file: $e");
-    Get.snackbar('Error', 'File picking failed',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.TOP);
-  }
   }
 
   Stream<List<JobModel>> getUserJobs() async* {
@@ -134,7 +131,7 @@ class UserProfileController extends GetxController {
       // Create a credential with the user's email and password
       await authController.updateEmail(
           email: emailController.text, password: passwordController.text);
-       userRepo.updateUser(
+      userRepo.updateUser(
         firstNameController.text,
         lastNameController.text,
         emailController.text,
